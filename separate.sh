@@ -21,6 +21,8 @@ do
 	
 	convert $dirname/$filenameclean.psd $result$filenameclean/$filenameclean-%d.png
 	rm $dirname/$filenameclean.psd
+	
+	mv $scan $dirname"/done/"$filename
 done
 
 rm -r $result/*/*-0.png
