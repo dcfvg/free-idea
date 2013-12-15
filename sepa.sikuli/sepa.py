@@ -1,6 +1,7 @@
 Settings.MoveMouseDelay = .1
 workspace = Region(226,223,1175,830)
 layerzone = Region(1647,574,268,604)
+tabszone = Region(39,80,369,17)
 blkpx = Pattern("1387107144347.png").similar(0.40)
 
 def findBlackPixel():
@@ -18,7 +19,7 @@ def init():
 
 init()
 
-while 1 :
+while 1:
     try:
         wait(1)
         findBlackPixel()
@@ -26,8 +27,9 @@ while 1 :
         pass
     
     except FindFailed:
-        wait(1)
         type(Key.F4, KeyModifier.CMD)
-        wait(3)
+        tabszone.waitVanish("1387133617238.png",FOREVER)
+        #switchApp("Terminal")
         exit()
         pass
+        
