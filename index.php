@@ -1,3 +1,21 @@
+<?php
+
+include("function.php");
+if(isset($_GET['f5'])){
+
+  
+  //$next = $_GET['f5']+1;
+  // header('Location: index.php?f5='.$next);
+  // for ($i=0; $i < 100; $i++) { 
+  //   sortBySize(str_pad($i, 2, "0"));
+  //   sleep(5);
+  // }
+  sortBySize("");
+  
+}
+
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,7 +24,7 @@
   <link rel="stylesheet" href="css/jquery-ui.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body id="drawZone">
+<body>
   <?php  
     // $files = glob("assets/separate-result/IMG_*/*.png");
     //     shuffle ($files);
@@ -20,11 +38,12 @@
     //     
     //     foreach ($files as $id_file => $file) echo '<img class="draggable" src="'.$file.'">';
   
-  include("function.php");
-  //if(isset($_GET['f5'])) sortBySize();
-  
+
   ?>
 	
+	<div id="drawZone"></div>
+	<!-- ><div id="deleteZone">
+	</div>-->
 	<script src="js/jquery-1.9.1.js"></script>
   <script src="js/jquery-ui.js"></script>
   <script src="js/free.js"></script>
