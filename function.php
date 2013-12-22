@@ -1,5 +1,5 @@
 <?php
-function sortBySize($start){
+function sortBySize(){
   
   
   ini_set('memory_limit', '-1');
@@ -10,7 +10,7 @@ function sortBySize($start){
   $cache = "assets/cache";
   if(!file_exists($cache)) mkdir($cache);
   
-  $files = glob("assets/separate-result/IMG_".$start."*/*.png");
+  $files = glob("assets/separate-result/IMG_*/*.png");
   
   foreach ($files as $id => $file) {
     $s = getimagesize($file);

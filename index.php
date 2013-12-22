@@ -2,16 +2,7 @@
 
 include("function.php");
 if(isset($_GET['f5'])){
-
-  
-  //$next = $_GET['f5']+1;
-  // header('Location: index.php?f5='.$next);
-  // for ($i=0; $i < 100; $i++) { 
-  //   sortBySize(str_pad($i, 2, "0"));
-  //   sleep(5);
-  // }
-  sortBySize("");
-  
+  sortBySize();
 }
 
 
