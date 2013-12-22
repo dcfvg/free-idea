@@ -5,8 +5,6 @@ function sortBySize(){
   ini_set('memory_limit', '-1');
   set_time_limit(6000);
   
-  
-  //$start = "";
   $cache = "assets/cache";
   if(!file_exists($cache)) mkdir($cache);
   
@@ -30,6 +28,35 @@ function sortBySize(){
 function aproxSize($s){
   return abs(round($s[0],-2)).'x'.abs(round($s[1],-2));
 }
+
+function findNearestPart($size){
+  $s = $size;
+
+  while (is_null($parts[0])) {
+
+    if($t%2 > 0 ) {
+      $s[0] = $size[0]-($try*100);
+    } else {
+      $s[1] = $size[1]-($try*100);
+      $try++;
+    }
+
+    $parts = glob("assets/cache/".aproxSize($s)."/*.png");
+    shuffle ($parts);
+
+    $t++;
+  }
+  return $parts[0];
+}
+function findPart($size){
+  
+  $parts = glob("assets/cache/".aproxSize($size)."/*.png");
+  
+  // if(is_null($parts[0])) $parts = glob("assets/cache/*x*/*.png"); // get full random if no result
+  
+  shuffle ($parts);
+  return $parts[0];
+}
 function getClosest($search, $arr) {
    $closest = null;
    foreach($arr as $item) {
@@ -39,4 +66,5 @@ function getClosest($search, $arr) {
    }
    return $closest;
 }
+
 ?>
