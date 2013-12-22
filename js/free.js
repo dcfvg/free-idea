@@ -1,7 +1,5 @@
 $(function() {
-  
 
-  
   function randomPlacement(){
     $('img.draggable').each(function(i,el){
       var tLeft = Math.floor(Math.random()*6000),
@@ -17,15 +15,13 @@ $(function() {
     });
   }
   
-  
-  
   $( "img.draggable" ).draggable();
 
   var ajax_url = "call.php",
   currentMousePos = { x: -1, y: -1 },
   startMousePos = { x: -1, y: -1 },
   endMousePos = { x: -1, y: -1 },
-  draw = false, deletemode = false;
+  draw = false;
 
   $("#drawZone").mousedown(function(event){
     startMousePos.x = event.pageX;
@@ -41,17 +37,15 @@ $(function() {
       get_file(size.x+"x"+size.y);
     };
   });
-  randomPlacement();
-  
-  
+
   $( "body" ).keydown(function( event ) {
-    if ( event.which == 32 ) {
-      if(draw == false) draw = true;       
-    }
+    if ( event.which == 32 ) if(draw == false) draw = true;
   });
   $( "body" ).keyup(function( event ) {
-    if ( event.which == 32 ) {
-       draw = false;
-    }
+    if ( event.which == 32 ) draw = false;
   });
+  $( "body" ).keypress(function( event ) {
+    if ( event.which == 114 ) $("#drawZone").find('img:first-child()').remove();
+  });
+  
 });
