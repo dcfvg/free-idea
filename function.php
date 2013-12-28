@@ -1,7 +1,6 @@
 <?php
 function sortBySize(){
   
-  
   ini_set('memory_limit', '-1');
   set_time_limit(6000);
   
@@ -28,7 +27,6 @@ function sortBySize(){
 function aproxSize($s){
   return abs(round($s[0],-2)).'x'.abs(round($s[1],-2));
 }
-
 function findNearestPart($size){
   $s = $size;
 
@@ -42,10 +40,9 @@ function findNearestPart($size){
     }
 
     $parts = glob("assets/cache/".aproxSize($s)."/*.png");
-    shuffle ($parts);
-
     $t++;
   }
+  shuffle ($parts);
   return $parts[0];
 }
 function findPart($size){
@@ -57,7 +54,7 @@ function findPart($size){
   shuffle ($parts);
   return $parts[0];
 }
-function getClosest($search, $arr) {
+function getClosest($search, $arr){
    $closest = null;
    foreach($arr as $item) {
       if($closest == null || abs($search - $closest) > abs($item - $search)) {
@@ -66,5 +63,4 @@ function getClosest($search, $arr) {
    }
    return $closest;
 }
-
 ?>
