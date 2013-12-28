@@ -13,16 +13,18 @@ do
 	extension="${filename##*.}"
 	filenameclean="${filename%.*}"
 	
-	echo $filename
-	open -a Adobe\ Photoshop\ CC.app $scan 
-	$sikuliIDE -r sepa.sikuli
-	
-	mkdir -v $result$filenameclean
-	
-	convert $dirname/$filenameclean.psd $result$filenameclean/$filenameclean-%d.png
-	rm $dirname/$filenameclean.psd
-	
-	mv $scan $dirname"/done/"$filename
-done
+	if [[ "$filename" == *IMG* ]]
+	then
+		echo $filename
+		open -a Adobe\ Photoshop\ CC.app $scan 
+		$sikuliIDE -r sepa.sikuli
 
+		mkdir -v $result$filenameclean
+		
+		convert $dirname/$filenameclean.psd $result$filenameclean/$filenameclean-%d.png
+		rm $dirname/$filenameclean.psd
+		
+		mv $scan $dirname"/done/"$filename
+	fi
+done
 rm -r $result/*/*-0.png
