@@ -26,6 +26,15 @@ $(function() {
   $("#drawZone").mousedown(function(event){
     startMousePos.x = event.pageX;
     startMousePos.y = event.pageY;
+    
+    if (draw) {
+      $("#drawZone").append('<div id="select"></div>');
+      $("#select").css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
+    } 
+  });
+  
+  $("#drawZone").mousemove(function( event ) {    
+    if (draw) $("#select").css({position:'absolute', width: (event.pageX - startMousePos.x), height: (event.pageY - startMousePos.y)});
   });
   $("#drawZone").mouseup(function(event){
     endMousePos.x = event.pageX;
@@ -36,6 +45,7 @@ $(function() {
       console.log(size);
       get_file(size.x+"x"+size.y);
     };
+    $("#select").remove();
   });
 
   $( "body" ).keydown(function( event ) {
@@ -47,5 +57,4 @@ $(function() {
   $( "body" ).keypress(function( event ) {
     if ( event.which == 114 ) $("#drawZone").find('img:first-child()').remove();
   });
-  
 });
