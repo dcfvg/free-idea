@@ -6,7 +6,7 @@ scans=$assets"source/"
 result=$assets"result/"
 sikuliIDE="/Applications/SikuliX-IDE.app/Contents/runIDE"
 
-for scan in `find $scans -iname "*.png" -maxdepth 1 -type f`
+for scan in `find $scans -iname "*.png" -maxdepth 1 -type f -exec du {} \; | sort -n`
 do
 	dirname=$(dirname "$scan")
 	filename=$(basename "$scan")
