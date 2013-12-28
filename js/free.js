@@ -1,5 +1,4 @@
 $(function() {
-
   function randomPlacement(){
     $('img.draggable').each(function(i,el){
       var tLeft = Math.floor(Math.random()*6000),
@@ -9,52 +8,56 @@ $(function() {
   }
   function get_file(query){
     var posting = $.post(ajax_url, { query: query } );
-    posting.done(function( data ) {
-      $("#drawZone").prepend('<img class="draggable" src="'+data+'">');
-      $("#drawZone").find('img:first-child()').css({position:'absolute', left: startMousePos.x, top: startMousePos.y}).draggable();
+    posting.done(function( data ) {      
+      data = JSON.parse(data);      
+      $paper
+        .append('<img class="draggable" src="'+data.part+'">')
+        .find('img:last-child()')
+        .css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
+        .draggable({disabled: true})
+        .draggable('enable');
     });
   }
+  function addSelectionZone(){
+    $("#select").remove();
+    $paper.append('<div id="select"></div>'); // create selection zone
+    $("#select").css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
+  }
   
-  $( "img.draggable" ).draggable();
-
-  var ajax_url = "call.php",
-  currentMousePos = { x: -1, y: -1 },
+  var 
+  ajax_url = "call.php",
   startMousePos = { x: -1, y: -1 },
   endMousePos = { x: -1, y: -1 },
-  draw = false;
-
-  $("#drawZone").mousedown(function(event){
+  draw = false,
+  $paper = $("#drawZone");
+  
+  $paper // mouse event
+  .mousedown(function(event){
     startMousePos.x = event.pageX;
     startMousePos.y = event.pageY;
     
-    if (draw) {
-      $("#drawZone").append('<div id="select"></div>');
-      $("#select").css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
-    } 
-  });
-  
-  $("#drawZone").mousemove(function( event ) {    
+    if (draw) addSelectionZone();
+  })
+  .mousemove(function( event ){
     if (draw) $("#select").css({position:'absolute', width: (event.pageX - startMousePos.x), height: (event.pageY - startMousePos.y)});
-  });
-  $("#drawZone").mouseup(function(event){
+    // get_file((event.pageX)+"x"+(event.pageY)); // test only
+  })
+  .mouseup(function(event){
     endMousePos.x = event.pageX;
     endMousePos.y = event.pageY;
     
-    if (draw) {
-      var size = { x: (endMousePos.x-startMousePos.x), y: (endMousePos.y-startMousePos.y) };
-      console.log(size);
-      get_file(size.x+"x"+size.y);
-    };
+    if (draw) get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );
     $("#select").remove();
   });
-
-  $( "body" ).keydown(function( event ) {
-    if ( event.which == 32 ) if(draw == false) draw = true;
-  });
-  $( "body" ).keyup(function( event ) {
-    if ( event.which == 32 ) draw = false;
-  });
-  $( "body" ).keypress(function( event ) {
-    if ( event.which == 114 ) $("#drawZone").find('img:first-child()').remove();
+  
+  $("html") // shortcut
+  .keydown(function( event ){
+    if ( event.which == 32 ) if(draw == false) draw = true; // toogle draw mode
+  })
+  .keyup(function( event ) {
+    if ( event.which == 32 ) draw = false; // toogle draw mode
+  })
+  .keypress(function( event ) {
+    if ( event.which == 114 ) $paper.find('img:first-child()').remove(); // remove last part
   });
 });

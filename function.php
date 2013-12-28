@@ -29,17 +29,14 @@ function aproxSize($s){
 }
 function findNearestPart($size){
   $s = $size;
-
   while (is_null($parts[0])) {
-
     if($t%2 > 0 ) {
       $s[0] = $size[0]-($try*100);
     } else {
       $s[1] = $size[1]-($try*100);
       $try++;
     }
-
-    $parts = glob("assets/cache/".aproxSize($s)."/*.png");
+    $parts = array_diff(glob("assets/cache/".aproxSize($s)."/*.png"),$_SESSION["history"]);
     $t++;
   }
   shuffle ($parts);
@@ -62,5 +59,23 @@ function getClosest($search, $arr){
       }
    }
    return $closest;
+}
+function array_not_unique($raw_array){
+    $dupes = array();
+    natcasesort($raw_array);
+    reset ($raw_array);
+
+    $old_key    = NULL;
+    $old_value    = NULL;
+    foreach ($raw_array as $key => $value) {
+        if ($value === NULL) { continue; }
+        if ($old_value == $value) {
+            $dupes[$old_key]    = $old_value;
+            $dupes[$key]        = $value;
+        }
+        $old_value    = $value;
+        $old_key    = $key;
+    }
+return $dupes;
 }
 ?>
