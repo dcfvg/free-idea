@@ -45,7 +45,7 @@ function findNearestPart($size){
 function findPart($size){
   
   $parts = glob("assets/cache/".aproxSize($size)."/*.png");
-  
+
   // if(is_null($parts[0])) $parts = glob("assets/cache/*x*/*.png"); // get full random if no result
   
   shuffle ($parts);
@@ -61,6 +61,9 @@ function getClosest($search, $arr){
    return $closest;
 }
 function array_not_unique($raw_array){
+  
+    // looking for duplicate element in array 
+  
     $dupes = array();
     natcasesort($raw_array);
     reset ($raw_array);

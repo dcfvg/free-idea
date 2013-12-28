@@ -23,6 +23,7 @@ $(function() {
     $paper.append('<div id="select"></div>'); // create selection zone
     $("#select").css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
   }
+  function init (){}
   
   var 
   ajax_url = "call.php",
@@ -31,7 +32,10 @@ $(function() {
   draw = false,
   $paper = $("#drawZone");
   
-  $paper // mouse event
+  
+  // set events
+  
+  $paper // mouse
   .mousedown(function(event){
     startMousePos.x = event.pageX;
     startMousePos.y = event.pageY;
@@ -50,7 +54,7 @@ $(function() {
     $("#select").remove();
   });
   
-  $("html") // shortcut
+  $("html") // keypress
   .keydown(function( event ){
     if ( event.which == 32 ) if(draw == false) draw = true; // toogle draw mode
   })
@@ -60,4 +64,5 @@ $(function() {
   .keypress(function( event ) {
     if ( event.which == 114 ) $paper.find('img:first-child()').remove(); // remove last part
   });
+
 });
