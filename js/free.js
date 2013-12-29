@@ -8,7 +8,7 @@ $(function() {
   }
   function get_file(query){
     var posting = $.post(ajax_url, { query: query } );
-    posting.done(function( data ) {      
+    posting.done(function( data ) {
       data = JSON.parse(data);      
       $paper
         .append('<img class="draggable" src="'+data.part+'">')
@@ -16,6 +16,16 @@ $(function() {
         .css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
         .draggable({disabled: true})
         .draggable('enable');
+    });
+  }
+  function removeLastPart(){
+    $paper.find('img:last-child()').remove()
+  }
+  function addToBlackList(file){
+    var posting = $.post(ajax_url, { blacklist: file } );
+    posting.done(function( data ) {
+      data = JSON.parse(data);
+      console.log(data);
     });
   }
   function addSelectionZone(){
@@ -58,11 +68,17 @@ $(function() {
   .keydown(function( event ){
     if ( event.which == 32 ) if(draw == false) draw = true; // toogle draw mode
   })
-  .keyup(function( event ) {
+  .keyup(function( event ){
     if ( event.which == 32 ) draw = false; // toogle draw mode
   })
-  .keypress(function( event ) {
-    if ( event.which == 114 ) $paper.find('img:first-child()').remove(); // remove last part
+  .keypress(function( event ){
+    // console.log(event.which);
+    if ( event.which == 114 ) removeLastPart();                           // r
+    if ( event.which == 98 ) {
+      addToBlackList($paper.find('img:last-child()').attr("src"));
+      removeLastPart();
+      
+    }
   });
 
 });

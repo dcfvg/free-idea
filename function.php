@@ -36,7 +36,9 @@ function findNearestPart($size){
       $s[1] = $size[1]-($try*100);
       $try++;
     }
-    $parts = array_diff(glob("assets/cache/".aproxSize($s)."/*.png"),$_SESSION["history"]);
+    
+    $exclude = array_unique(array_merge($_SESSION["blacklist"],$_SESSION["history"]));
+    $parts = array_diff(glob("assets/cache/".aproxSize($s)."/*.png"),$exclude);
     $t++;
   }
   shuffle ($parts);
