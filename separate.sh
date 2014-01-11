@@ -26,6 +26,5 @@ do
 		
 		mv $scan $dirname"/done/"$filename
 	fi
-
 done
 rm -r $result/*/*-0.png
