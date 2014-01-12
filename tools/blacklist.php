@@ -7,10 +7,9 @@ if(!isset($_SESSION["history"])) $_SESSION["history"][] = 0;
 //if(!isset($_SESSION["blacklist"])) $_SESSION["blacklist"] = unserialize(file_get_contents($blacklist_cache));; 
 
 if(isset($_GET["del"])){
+  
   echo array_search($_GET["del"], $_SESSION["blacklist"]);
-  
   unset($_SESSION["blacklist"][array_search($_GET["del"], $_SESSION["blacklist"] )]);
-  
   file_put_contents($blacklist_cache, serialize($_SESSION["blacklist"]));
 }
 

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/jquery-ui.css">
     <link rel="stylesheet" href="css/style.css">
   </head>
-  <body>
+  <body id="mainApp">
   	<div id="drawZone"></div>
   	<script src="js/jquery-1.9.1.js"></script>
     <script src="js/jquery-ui.js"></script>
