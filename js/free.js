@@ -16,6 +16,7 @@ $(function() {
         .css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
         .draggable({disabled: true})
         .draggable('enable');
+        console.log(data);
     });
   }
   function removeLastPart(){
@@ -41,7 +42,6 @@ $(function() {
   endMousePos = { x: -1, y: -1 },
   draw = false,
   $paper = $("#drawZone");
-  
   
   // set events
   
@@ -72,13 +72,12 @@ $(function() {
     if ( event.which == 32 ) draw = false; // toogle draw mode
   })
   .keypress(function( event ){
-    // console.log(event.which);
+    //console.log(event.which);
     if ( event.which == 114 ) removeLastPart();                           // r
+    if ( event.which == 113 ) get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );                       //
     if ( event.which == 98 ) {
       addToBlackList($paper.find('img:last-child()').attr("src"));
       removeLastPart();
-      
     }
   });
-
 });

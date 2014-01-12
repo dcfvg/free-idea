@@ -10,15 +10,21 @@ include("function.php");
 
 if(isset($_POST["query"])) {
   $size = $_POST["query"];
-  //$size = "1000x1000";
+  //$size = "1356x1268";
+  
   $size = explode("x",$size);
-
-  $part = findNearestPart($size);
+  $find = findNearestPart($size);
+  
+  $part = $find["result"];
+  
   $_SESSION["history"][] = $part;
 
-  $result["part"] = $part;
   // $result["history"] = $_SESSION["history"];
+  $result["part"] = $part;
   $result["duplicate"] = array_not_unique($_SESSION["history"]);
+  $result["trys"] = $find["trys"];
+  $result["querys"] = $find["querys"];
+  
 }
 if(isset($_POST["blacklist"])){
   $_SESSION["blacklist"][] = $_POST["blacklist"];
@@ -30,4 +36,4 @@ if(isset($_POST["blacklist"])){
 }
 
 echo json_encode($result);
-?>                 
+?>

@@ -10,8 +10,9 @@ function sortBySize(){
   $files = glob("assets/separate-result/IMG_*/*.png");
   
   foreach ($files as $id => $file) {
-    $s = getimagesize($file);
-    $d = $cache.'/'.aproxSize($s);
+
+    $s = aproxSize(getimagesize($file));
+    $d = $cache.'/'.$s[0]."x".$s[1];
     
     if(!file_exists($d)) mkdir($d);
     
@@ -21,28 +22,37 @@ function sortBySize(){
       copy($file,$newFile);
        $p++;
     }
-  } 
-  echo $p;
+  }
+  echo '<h1 id="f5">'.count($files)." (+".$p.")         <h1>";
 }
 function aproxSize($s){
-  return abs(round($s[0],-2)).'x'.abs(round($s[1],-2));
+  $s[0] = abs(round($s[0],-2));
+  $s[1] = abs(round($s[1],-2));
+  return $s;
 }
-function findNearestPart($size){
-  $s = $size;
-  while (is_null($parts[0])) {
-    if($t%2 > 0 ) {
-      $s[0] = $size[0]-($try*100);
-    } else {
-      $s[1] = $size[1]-($try*100);
-      $try++;
-    }
+function findNearestPart($s){
+  $t = 0;
+  $s = aproxSize($s);
+  
+  while (is_null($parts[0]) and $t < 100) {
+    
+    $res["querys"][] = $s[0]."x".$s[1];
+    $flip = !$flip;
+    
+    if($flip) $s[0] = max(0,$s[0]-100);
+    else      $s[1] = max(0,$s[1]-100);
     
     $exclude = array_unique(array_merge($_SESSION["blacklist"],$_SESSION["history"]));
-    $parts = array_diff(glob("assets/cache/".aproxSize($s)."/*.png"),$exclude);
+    $parts = array_diff(glob("assets/cache/".$s[0]."x".$s[1]."/*.png"),$exclude);
+    
     $t++;
   }
   shuffle ($parts);
-  return $parts[0];
+  
+  $res["result"] = $parts[0];
+  $res["trys"] = $t;
+  
+  return $res;
 }
 function findPart($size){
   
