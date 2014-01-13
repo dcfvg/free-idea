@@ -6,7 +6,7 @@ output="$assets/posters"
 nbdir=$(find $cache -type d | wc -l | sed 's/^ *//g')
 i=1
 
-printf "\tcount\tsize in px\tfile count\n"
+printf "\n\tcount\tsize in px\tfile count\n"
 printf "|-------------------------------------------------|\n"
 
 

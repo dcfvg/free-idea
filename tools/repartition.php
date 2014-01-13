@@ -3,7 +3,7 @@ $cache = "../assets/cache/";
 include("../function.php");
 $total = count(glob($cache.'/*x*/IMG_*'));
 
-$step = 10;
+$step = pow(10,$GLOBALS['clusterSize']);
 $maxsize = 2500; 
 for ($c=-1; $c < $maxsize/$step; $c++) {
   $tab .= '<tr>';
