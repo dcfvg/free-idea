@@ -1,6 +1,9 @@
 <?php
+  
   include("function.php");
+  
   if(isset($_GET['f5'])) sortBySize();
+
   session_start();
   unset($_SESSION["history"]);
 ?>

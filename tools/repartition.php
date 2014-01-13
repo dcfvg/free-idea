@@ -2,24 +2,28 @@
 $cache = "../assets/cache/";
 include("../function.php");
 $total = count(glob($cache.'/*x*/IMG_*'));
-for ($c=0; $c < 45; $c++) {
+
+$step = 10;
+$maxsize = 2500; 
+for ($c=-1; $c < $maxsize/$step; $c++) {
   $tab .= '<tr>';
-  for ($l=0; $l < 45; $l++) {
-    if($l == 0) $tab .= '<th>'.($c*100).'</th>';
-    else if($c == 0) $tab .= '<th>'.($l*100).'</th>';
+  for ($l=-1; $l < $maxsize/$step; $l++) {
+    if($l < 0) $tab .= '<th>'.($c*$step).'</th>';
+    else if($c < 0) $tab .= '<th>'.($l*$step).'</th>';
     else {
-      $nb = count(glob($cache.'/'.($c*100).'x'.($l*100).'/IMG_*'));
-      $color = 255-round(($nb/$total)*10000);
+      $nb = count(glob($cache.'/'.bzero(($c*$step)).'x'.bzero(($l*$step)).'/IMG_*'));
+      $color = 255-round(($nb/$total)*20000);
       $color2 = 0;
       if($nb == 0) {
        $color = 0;
-       $color2 = 255; 
+       $color2 = 255;
       }
       $tab .= '<td style="background:rgb('.$color2.',255,'.$color.');">'.$nb.'</td>';
-    } 
+    }
   }
   $tab .= '</tr>';
 }
+
 ?>
 <html>
   <head>
@@ -38,43 +42,40 @@ for ($c=0; $c < 45; $c++) {
     </table>
     <script src="../js/jquery-1.9.1.js"></script>
     <script>
-    $(function() {
-        $("table").delegate('td','mouseover mouseleave', function(e) {
-            if (e.type == 'mouseover') {
-              $(this).parent().find("th").addClass("hover");
-              $("tbody th:nth-child(" + ($(this).index()+1) + ")").addClass("hover");
+      $(function() {
+          $("table").delegate('td','mouseover mouseleave', function(e) {
+              if (e.type == 'mouseover') {
+                $(this).parent().find("th").addClass("hover");
+                $("tbody th:nth-child(" + ($(this).index()+1) + ")").addClass("hover");
               
-              var w = $("tbody th:nth-child(" + ($(this).index()+1) + ") ").first().text(); 
-              var h = $(this).parent().find("th").text() ;
+                var w = $("tbody th:nth-child(" + ($(this).index()+1) + ") ").first().text(); 
+                var h = $(this).parent().find("th").text() ;
               
-              // move demo square and update size information
-              $("#demo").height(h/50).width(w/50);
-              $("#demo p").html(h + " x "+w+"px");
+                // move demo square and update size information
+                $("#demo").height(h/50).width(w/50);
+                $("#demo p").html(h + " x "+w+"px");
               
-            } else {
-              $(this).parent().find("th").removeClass("hover");
-              $("tbody th:nth-child(" + ($(this).index()+1) + ")").removeClass("hover");
-            }
-        });
+              } else {
+                $(this).parent().find("th").removeClass("hover");
+                $("tbody th:nth-child(" + ($(this).index()+1) + ")").removeClass("hover");
+              }
+          });
         
-        var mouseX = 0, mouseY = 0, limitX = 150000-15, limitY = 150000-15;
-        $(window).mousemove(function(e){
-           mouseX = Math.min(e.pageX, limitX) + 30;
-           mouseY = Math.min(e.pageY, limitY) + 30;
-        });
+          var mouseX = 0, mouseY = 0, limitX = 150000-15, limitY = 150000-15;
+        
+          $(window).mousemove(function(e){
+             mouseX = Math.min(e.pageX, limitX) + 30;
+             mouseY = Math.min(e.pageY, limitY) + 30;
+          });
 
-        // cache the selector
-        var follower = $("#demo");
-        var xp = 20, yp = 20;
-        var loop = setInterval(function(){
-            // change 12 to alter damping higher is slower
-            xp += (mouseX - xp) / 2;
-            yp += (mouseY - yp) / 2;
-            follower.css({left:xp, top:yp});
-
-        }, 40);
-    });
-
+          var follower = $("#demo");
+          var xp = 20, yp = 20;
+          var loop = setInterval(function(){
+              xp += (mouseX - xp) / 2;
+              yp += (mouseY - yp) / 2;
+              follower.css({left:xp, top:yp});
+          }, 40);
+      });
     </script>
   </body>
 </html>

@@ -1,15 +1,5 @@
 @import "gui";
 
-#mainApp * {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  cursor:crosshair;
-  
-}
 
 body, html, #drawZone {
   width:100%;
@@ -20,18 +10,26 @@ body, html, #drawZone {
   font-size:3em;
   
 }
-#select {
-  background:salmon;
-  opacity:0.1;
-  .rounded(50px);
+#mainApp * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor:crosshair;
+  
 }
-.ui-draggable-dragging {}
-  
-  
+#select {
+  background:yellow;
+  opacity:0.1;
+  .rounded(20px);
+}
+
+/* TOOLS */
+
 #blacklist {
-  
   font-family:monaco;
-  
   li {
     float:left;
     width:10%;
@@ -56,9 +54,10 @@ body, html, #drawZone {
     font-size:70px;
   }
 } 
-
 #graph{ 
   table {
+    .hover { background-color: salmon; color:white }
+    
     border:none;
     font-family:monaco;
     font-size:9px;
@@ -81,9 +80,11 @@ body, html, #drawZone {
     border:#FF0000 1px solid;
     background:white;
     
-    top:100px;
-    left:100px;
+    top:-100px;
+    left:-100px;
     
+    width:0;
+    height:0;
     p{
       font-family:monaco;
       position:relative;
@@ -95,4 +96,12 @@ body, html, #drawZone {
     }
   }
 }
-.hover { background-color: salmon; color:white }
+#poster {
+  .size {
+    text-align:center;
+    
+    font-family:"Myriad Pro";
+    font-size:16pt;
+    padding:3%;
+  }
+}

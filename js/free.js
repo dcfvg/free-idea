@@ -9,14 +9,18 @@ $(function() {
   function get_file(query){
     var posting = $.post(ajax_url, { query: query } );
     posting.done(function( data ) {
-      data = JSON.parse(data);      
-      $paper
-        .append('<img class="draggable" src="'+data.part+'">')
-        .find('img:last-child()')
-        .css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
-        .draggable({disabled: true})
-        .draggable('enable');
-        console.log(data);
+      data = JSON.parse(data);    
+      if(data.part){
+        $paper
+          .append('<img class="draggable" src="'+data.part+'">')
+          .find('img:last-child()')
+          .css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
+          .draggable({disabled: true})
+          .draggable('enable');
+      }else{
+        console.log("no result");
+      }
+      console.log(data);
     });
   }
   function removeLastPart(){
