@@ -7,31 +7,25 @@ blkpx = Pattern(Pattern("1387107144347.png").exact())
 def findBlackPixel():
     workspace.click(blkpx)
 
-def getMagicWand():
-    type("z") # z in french keyboard
-
 def init():
     layerzone.wait("1387127441955.png",FOREVER)
     switchApp("Adobe Photoshop CC")
     type(Key.F1, KeyModifier.CMD)
     wait(2)
     type("z")
-
 init()
 
 while 1:
     try:
         wait(0.5)
         findBlackPixel()
-        wait(0.5)
         type(Key.F2, KeyModifier.CMD)
-        #type(Key.ENTER)
+        type(Key.ENTER)
         pass
     
     except FindFailed:
         type(Key.F4, KeyModifier.CMD)
         tabszone.waitVanish("1387133617238.png",FOREVER)
-        #switchApp("Terminal")
         exit()
         pass
         
