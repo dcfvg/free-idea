@@ -1,8 +1,8 @@
-Settings.MoveMouseDelay = .1
-workspace = Region(226,223,1175,830)
-layerzone = Region(1652,401,268,799)
-tabszone = Region(39,80,369,17)
-blkpx = Pattern("1387107144347.png").similar(0.65)
+Settings.MoveMouseDelay = 0
+workspace = Region(105,145,1219,835)
+layerzone = Region(1409,430,272,620)
+tabszone = Region(40,77,24,22)
+blkpx = Pattern(Pattern("1387107144347.png").exact())
 
 def findBlackPixel():
     workspace.click(blkpx)
@@ -21,9 +21,11 @@ init()
 
 while 1:
     try:
-        wait(1)
+        wait(0.5)
         findBlackPixel()
+        wait(0.5)
         type(Key.F2, KeyModifier.CMD)
+        #type(Key.ENTER)
         pass
     
     except FindFailed:
