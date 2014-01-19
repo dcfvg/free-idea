@@ -2,7 +2,7 @@ Settings.MoveMouseDelay = .1
 workspace = Region(226,223,1175,830)
 layerzone = Region(1652,401,268,799)
 tabszone = Region(39,80,369,17)
-blkpx = Pattern("1387107144347.png").similar(0.79)
+blkpx = Pattern("1387107144347.png").similar(0.65)
 
 def findBlackPixel():
     workspace.click(blkpx)
