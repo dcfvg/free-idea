@@ -81,4 +81,13 @@ function array_not_unique($raw_array){
     }
 return $dupes;
 }
+function pxTocm($s){
+ 
+ $cons = 5.905628064;
+ 
+ $s[0] = round($s[0]/$cons);
+ $s[1] = round($s[1]/$cons);
+
+ return $s[0]." × ".$s[1]." mm";
+}
 ?>
