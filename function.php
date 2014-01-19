@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['clusterSize'] = 2;
+$GLOBALS['clusterSize'] = 0;
 $GLOBALS['maxTry'] = 100;
 
 function sortBySize(){
@@ -11,7 +11,7 @@ function sortBySize(){
   $cache = "assets/cache";
   if(!file_exists($cache)) mkdir($cache);
   
-  $files = glob("assets/separate-result/IMG_*/*.png");
+  $files = glob("assets/separate-result-2/IMG_*/*.png");
   foreach ($files as $id => $file) {
 
     $s = aproxSize(getimagesize($file));
