@@ -2,7 +2,6 @@
 $cache = "../assets/cache/";
 include("../function.php");
 
-
 if(isset($_GET["s"])){
   $s = $_GET["s"];
   
@@ -15,16 +14,6 @@ if(isset($_GET["s"])){
   }
   
   $size = explode("x",$s);  
-}
-
-function pxTocm($s){
- 
- $cons = 5.905628064;
- 
- $s[0] = round($s[0]/$cons);
- $s[1] = round($s[1]/$cons);
-
- return $s[0]." × ".$s[1]." mm";
 }
 ?>
 <html>
