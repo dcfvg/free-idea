@@ -1,7 +1,7 @@
 <?php
 
-$GLOBALS['clusterSize'] = 0;
-$GLOBALS['maxTry'] = 100;
+$GLOBALS['clusterSize'] = 1;
+$GLOBALS['maxTry'] = 500;
 
 function sortBySize(){
   
