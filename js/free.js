@@ -42,6 +42,7 @@ $(function() {
   
   var 
   ajax_url = "call.php",
+  currentMousePos = { x: -1, y: -1 },
   startMousePos = { x: -1, y: -1 },
   endMousePos = { x: -1, y: -1 },
   draw = false,
@@ -59,6 +60,8 @@ $(function() {
   .mousemove(function( event ){
     if (draw) $("#select").css({position:'absolute', width: (event.pageX - startMousePos.x), height: (event.pageY - startMousePos.y)});
     // get_file((event.pageX)+"x"+(event.pageY)); // test only
+    currentMousePos.x = event.pageX;
+    currentMousePos.y = event.pageY;
   })
   .mouseup(function(event){
     endMousePos.x = event.pageX;
@@ -78,7 +81,13 @@ $(function() {
   .keypress(function( event ){
     //console.log(event.which);
     if ( event.which == 114 ) removeLastPart();                           // r
-    if ( event.which == 113 ) get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );                       //
+    if ( event.which == 113 ) {
+    
+      startMousePos.x = currentMousePos.x;
+      startMousePos.y = currentMousePos.y;
+      get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );                       //
+    
+    }
     if ( event.which == 98 ) {
       addToBlackList($paper.find('img:last-child()').attr("src"));
       removeLastPart();
