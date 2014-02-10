@@ -40,7 +40,7 @@ if (system.args.length < 3 || system.args.length > 5) {
             phantom.exit();
         } else {
             window.setTimeout(function () {
-                page.render(output);
+                page.render(output+".png");
                 phantom.exit();
             }, 200);
         }
