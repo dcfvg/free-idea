@@ -17,6 +17,11 @@
   </head>
   <body id="mainApp">
   	<div id="drawZone"></div>
+  	<video id="videoID" width="100%" height="100%">
+    	<source src="capture0002_640x360.mp4" type="video/mp4" />
+    	<track src="capture0002_640x360.srt" kind="subtitle" srclang="en-US" label="English" />
+    	Your browser does not support HTML5 video.
+    </video>
   	<script src="js/jquery-1.9.1.js"></script>
     <script src="js/jquery-ui.js"></script>
     <script src="js/free.js"></script>
