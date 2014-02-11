@@ -45,7 +45,7 @@ $(function() {
   currentMousePos = { x: -1, y: -1 },
   startMousePos = { x: -1, y: -1 },
   endMousePos = { x: -1, y: -1 },
-  draw = false,
+  draw = true,
   $paper = $("#drawZone");
   
   // set events
@@ -73,10 +73,10 @@ $(function() {
   
   $("html") // keypress
   .keydown(function( event ){
-    if ( event.which == 32 ) if(draw == false) draw = true; // toogle draw mode
+    //if ( event.which == 32 ) if(draw == false) draw = true; // toogle draw mode
   })
   .keyup(function( event ){
-    if ( event.which == 32 ) draw = false; // toogle draw mode
+    //if ( event.which == 32 ) draw = false; // toogle draw mode
   })
   .keypress(function( event ){
     //console.log(event.which);
@@ -93,4 +93,8 @@ $(function() {
       removeLastPart();
     }
   });
+
+
+
+  
 });
