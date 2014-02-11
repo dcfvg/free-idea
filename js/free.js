@@ -40,6 +40,17 @@ $(function() {
   }
   function init (){}
   
+  function screensaver() {
+    $("#videoID").get(0).play();
+    
+    var LowerRange=100,
+    UpperRange=400;
+    
+    document.getElementById("videoID").currentTime = Math.floor(Math.random() * (UpperRange - LowerRange + 1)) + LowerRange;;
+    
+    $("#videoID").show();
+  }
+  
   var 
   ajax_url = "call.php",
   currentMousePos = { x: -1, y: -1 },
@@ -48,6 +59,10 @@ $(function() {
   draw = true,
   $paper = $("#drawZone");
   
+  $("body").mousemove(function( event ){
+    $("#videoID").hide();
+    screensavertimer = setTimeout(screensaver, 5000);
+  })
   // set events
   
   $paper // mouse
