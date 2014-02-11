@@ -90,4 +90,21 @@ function pxTocm($s){
 
  return $s[0]." × ".$s[1]." mm";
 }
+function getclosetratio(){
+  // from http://stackoverflow.com/questions/928247/sorting-and-displaying-image-based-on-size
+  $record_ratio = 0;
+  foreach (glob("*.jpg") as $filename) {
+      $info = getimagesize($filename);
+      $ratio = $info[0] / $info[1];
+      if (abs(1 - $ratio) < abs(1 - $record_ratio)) {
+        $record_ratio = $ratio;
+        $record_filename = $filename;
+      }
+      if (record_ratio == 1) break;
+  }
+  if ($record_ratio > 0) {
+    echo '<img src="'.$record_filename.'" height=150px><br>';
+  }
+}
+
 ?>
