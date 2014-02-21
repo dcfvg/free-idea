@@ -38,7 +38,30 @@ $(function() {
     $paper.append('<div id="select"></div>'); // create selection zone
     $("#select").css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
   }
-  function init (){}
+  function init(){
+    
+   init_camera();
+  }
+  function init_camera(){
+		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+		
+		window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
+		if (navigator.getUserMedia && window.URL) {
+			var video = document.getElementById('my_camera');
+
+			navigator.getUserMedia({
+				"audio": false,
+				"video": { "mandatory": { "minWidth": vid_h, "minHeight": vid_h } }
+			},
+			function(stream) { // got access, attach stream to video
+				video.src = window.URL.createObjectURL( stream ) || stream;
+			});
+		}
+		else {
+			alert("getUserMedia not supported on your machine!");
+		}
+  }
   
   var 
   ajax_url = "call.php",
@@ -46,7 +69,12 @@ $(function() {
   startMousePos = { x: -1, y: -1 },
   endMousePos = { x: -1, y: -1 },
   draw = false,
-  $paper = $("#drawZone");
+  $paper = $("body"),
+  $video = $( "#my_camera" ), vid_h=1080,vid_w=1920;
+  
+  // init 
+  
+  init();
   
   // set events
   
