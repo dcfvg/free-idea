@@ -49,6 +49,7 @@ $(function() {
     document.getElementById("videoID").currentTime = Math.floor(Math.random() * (UpperRange - LowerRange + 1)) + LowerRange;;
     
     $("#videoID").show();
+    $("#drawZone").empty();
   }
   
   var 
@@ -57,11 +58,14 @@ $(function() {
   startMousePos = { x: -1, y: -1 },
   endMousePos = { x: -1, y: -1 },
   draw = true,
-  $paper = $("#drawZone");
+  $paper = $("#drawZone"),
+  screensavertimer = setTimeout(screensaver, 1000);
+  
   
   $("body").mousemove(function( event ){
     $("#videoID").hide();
-    screensavertimer = setTimeout(screensaver, 5000);
+    clearTimeout(screensavertimer);
+    screensavertimer = setTimeout(screensaver, 3*60*1000);
   })
   // set events
   
@@ -88,10 +92,10 @@ $(function() {
   
   $("html") // keypress
   .keydown(function( event ){
-    //if ( event.which == 32 ) if(draw == false) draw = true; // toogle draw mode
+    if ( event.which == 32 ) if(draw == true) draw = false; // toogle draw mode
   })
   .keyup(function( event ){
-    //if ( event.which == 32 ) draw = false; // toogle draw mode
+    if ( event.which == 32 ) draw = true; // toogle draw mode
   })
   .keypress(function( event ){
     //console.log(event.which);
@@ -108,8 +112,4 @@ $(function() {
       removeLastPart();
     }
   });
-
-
-
-  
 });
