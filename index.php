@@ -1,11 +1,12 @@
 <?php
   
   include("function.php");
+  session_start();
   
   if(isset($_GET['f5'])) sortBySize();
-
-  session_start();
-  unset($_SESSION["history"]);
+  if(isset($_GET['reset'])) unset($_SESSION["history"]);
+  
+  // print_r($_SESSION["history"]);
 ?>
 <!doctype html>
 <html lang="en">
