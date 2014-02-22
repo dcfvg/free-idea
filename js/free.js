@@ -67,9 +67,10 @@ $(function() {
   currentMousePos = { x: -1, y: -1 },
   startMousePos = { x: -1, y: -1 },
   endMousePos = { x: -1, y: -1 },
-  z = 100, moves = 0;
+  z = 100, moves = 0, moves_max = 8,
   draw = false,
   draw_dot = false,
+  draw_around = false,
   $paper = $("#drawZone"),
   $video = $( "#my_camera" ), vid_h=1080,vid_w=1920;
   
@@ -92,10 +93,16 @@ $(function() {
     currentMousePos.x = event.pageX;
     currentMousePos.y = event.pageY;
     moves++;
-    if(draw_dot && draw & moves > 5){
+    if(draw_dot && draw && moves > moves_max){
       startMousePos.x = currentMousePos.x;
       startMousePos.y = currentMousePos.y;
       get_file("100x100");
+      moves = 0;
+    }
+    if(draw_around && draw && moves > moves_max){
+      startMousePos.x = currentMousePos.x;
+      startMousePos.y = currentMousePos.y;
+      get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );
       moves = 0;
     }
   })
@@ -113,6 +120,7 @@ $(function() {
     if ( event.which == 32 ) {
       draw = false; // toogle draw mode
       draw_dot = false;
+      draw_around = false;
     }
   })
   .keypress(function( event ){
@@ -135,9 +143,7 @@ $(function() {
     // q -> add element around the same point
     if ( event.which == 113 ) 
     {
-      startMousePos.x = currentMousePos.x;
-      startMousePos.y = currentMousePos.y;
-      get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );                       //
+      draw_around = !draw_around;
     }
     // b -> add to black list
     if ( event.which == 98 ) {
