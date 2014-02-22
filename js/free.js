@@ -15,7 +15,7 @@ $(function() {
           .append('<img class="draggable" src="'+data.part+'">')
           .find('img:last-child()')
           .css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
-          .draggable({disabled: true})
+          .draggable({disabled: true, start: function(event, ui) { $(this).css("z-index", z++); }})
           .draggable('enable');
       }else{
         console.log("no result");
@@ -39,7 +39,6 @@ $(function() {
     $("#select").css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
   }
   function init(){
-    
    init_camera();
   }
   function init_camera(){
@@ -68,8 +67,10 @@ $(function() {
   currentMousePos = { x: -1, y: -1 },
   startMousePos = { x: -1, y: -1 },
   endMousePos = { x: -1, y: -1 },
+  z = 100, moves = 0;
   draw = false,
-  $paper = $("body"),
+  draw_dot = false,
+  $paper = $("#drawZone"),
   $video = $( "#my_camera" ), vid_h=1080,vid_w=1920;
   
   // init 
@@ -78,7 +79,7 @@ $(function() {
   
   // set events
   
-  $paper // mouse
+  $(document) // mouse
   .mousedown(function(event){
     startMousePos.x = event.pageX;
     startMousePos.y = event.pageY;
@@ -90,6 +91,13 @@ $(function() {
     // get_file((event.pageX)+"x"+(event.pageY)); // test only
     currentMousePos.x = event.pageX;
     currentMousePos.y = event.pageY;
+    moves++;
+    if(draw_dot && draw & moves > 5){
+      startMousePos.x = currentMousePos.x;
+      startMousePos.y = currentMousePos.y;
+      get_file("100x100");
+      moves = 0;
+    }
   })
   .mouseup(function(event){
     endMousePos.x = event.pageX;
@@ -97,25 +105,41 @@ $(function() {
     
     if (draw) get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );
     $("#select").remove();
-  });
-  
-  $("html") // keypress
+  })
   .keydown(function( event ){
     if ( event.which == 32 ) if(draw == false) draw = true; // toogle draw mode
   })
   .keyup(function( event ){
-    if ( event.which == 32 ) draw = false; // toogle draw mode
+    if ( event.which == 32 ) {
+      draw = false; // toogle draw mode
+      draw_dot = false;
+    }
   })
   .keypress(function( event ){
     //console.log(event.which);
-    if ( event.which == 114 ) removeLastPart();                           // r
-    if ( event.which == 113 ) {
     
+    // r -> rm last part
+    if ( event.which == 114 ) removeLastPart(); 
+    // s -> change last part
+    if ( event.which == 115 ) {
+      removeLastPart();
+      get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );
+    }
+    // d -> draw with dot 
+    if ( event.which == 100 ) {
+      draw_dot = !draw_dot;
+      //console.log("draw_dot:"+draw_dot);
+    }
+    // e -> eraser
+    if ( event.which == 101 ) $paper.empty();
+    // q -> add element around the same point
+    if ( event.which == 113 ) 
+    {
       startMousePos.x = currentMousePos.x;
       startMousePos.y = currentMousePos.y;
       get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );                       //
-    
     }
+    // b -> add to black list
     if ( event.which == 98 ) {
       addToBlackList($paper.find('img:last-child()').attr("src"));
       removeLastPart();
