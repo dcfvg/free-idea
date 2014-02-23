@@ -38,9 +38,6 @@ $(function() {
     $paper.append('<div id="select"></div>'); // create selection zone
     $("#select").css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
   }
-  function init(){
-   init_camera();
-  }
   function init_camera(){
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		
@@ -61,7 +58,7 @@ $(function() {
 			alert("getUserMedia not supported on your machine!");
 		}
   }
-  
+  function init(){  }
   var 
   ajax_url = "call.php",
   currentMousePos = { x: -1, y: -1 },
@@ -125,25 +122,22 @@ $(function() {
   })
   .keypress(function( event ){
     //console.log(event.which);
-    
     // r -> rm last part
     if ( event.which == 114 ) removeLastPart(); 
+    // d -> draw with dot 
+    if ( event.which == 100 ) draw_dot = !draw_dot;
+    // e -> eraser
+    if ( event.which == 101 ) $paper.empty();
+    // q -> add element around the same point
+    if ( event.which == 113 ) draw_around = !draw_around;
+    
+    // start webcam
+    if ( event.which == 119 ) init_camera();    
+    
     // s -> change last part
     if ( event.which == 115 ) {
       removeLastPart();
       get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );
-    }
-    // d -> draw with dot 
-    if ( event.which == 100 ) {
-      draw_dot = !draw_dot;
-      //console.log("draw_dot:"+draw_dot);
-    }
-    // e -> eraser
-    if ( event.which == 101 ) $paper.empty();
-    // q -> add element around the same point
-    if ( event.which == 113 ) 
-    {
-      draw_around = !draw_around;
     }
     // b -> add to black list
     if ( event.which == 98 ) {
