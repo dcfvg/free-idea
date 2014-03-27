@@ -121,7 +121,7 @@ $(function() {
     }
   })
   .keypress(function( event ){
-    //console.log(event.which);
+    //console.log(event.which);≤
     // r -> rm last part
     if ( event.which == 114 ) removeLastPart(); 
     // d -> draw with dot 
@@ -131,18 +131,18 @@ $(function() {
     // q -> add element around the same point
     if ( event.which == 113 ) draw_around = !draw_around;
     
-    // start webcam
+    // w -> start webcam
     if ( event.which == 119 ) init_camera();    
     
     // s -> change last part
-    if ( event.which == 115 ) {
+    if ( event.which == 115 ){
       removeLastPart();
       get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );
-    }
+    };
     // b -> add to black list
-    if ( event.which == 98 ) {
+    if ( event.which == 98 ){
       addToBlackList($paper.find('img:last-child()').attr("src"));
       removeLastPart();
-    }
+    };
   });
 });
