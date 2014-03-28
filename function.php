@@ -1,7 +1,8 @@
 <?php
 
 $GLOBALS['clusterSize'] = 2;
-$GLOBALS['maxTry'] = 500;
+$GLOBALS['maxTry'] = 3;
+$GLOBALS['cache'] = "assets/cache/";
 
 function sortBySize(){
   
@@ -49,7 +50,7 @@ function findNearestPart($s){
     else      $s[1] = bzero(max(0,$s[1]-$step));
     
     $exclude = array_unique(array_merge($_SESSION["blacklist"],$_SESSION["history"]));
-    $parts = array_diff(glob("assets/cache/".$s[0]."x".$s[1]."/*.png"),$exclude);
+    $parts = array_diff(glob($GLOBALS['cache'].$s[0]."x".$s[1]."/*.png"),$exclude);
     
     $t++;
   }
