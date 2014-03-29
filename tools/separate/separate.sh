@@ -1,11 +1,11 @@
 #!/bin/bash
 set -x
 
-assets      = $(pwd)"/../../assets/"
-scans       = $assets"source/"
-result      = $assets"result/"
-scans_done  = $scans"done/"
-scans_psd   = $scans"done_psd/"
+assets=$(pwd)"/../../assets/"
+scans=$assets"source/"
+result=$assets"result/"
+scans_done=$scans"done/"
+scans_psd=$scans"done_psd/"
 
 sikuliIDE="/Applications/SikuliX-IDE.app/Contents/runIDE"
 
