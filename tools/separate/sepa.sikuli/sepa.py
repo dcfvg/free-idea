@@ -4,6 +4,8 @@ layerzone = Region(1409,430,272,620)
 tabszone = Region(40,77,24,22)
 blkpx = "1390149570064.png"
 
+# english keyboard enable
+
 def findBlackPixel():
     workspace.click(blkpx)
 
@@ -12,13 +14,14 @@ def init():
     switchApp("Adobe Photoshop CC")
     type(Key.F1, KeyModifier.CMD)
     wait(2)
-    type("z")
+    type("0", KeyModifier.CMD)
+    type("w") # magic wand
 init()
 
 while 1:
     try:
         findBlackPixel()
-        wait(0.5)
+        wait(0.2)
         type(Key.F2, KeyModifier.CMD)
         wait(1)
         type(Key.ENTER)
@@ -30,8 +33,6 @@ while 1:
         click(Location(700,500))
         wait(1)
         type(Key.F4, KeyModifier.CMD)
-        #type(Key.ENTER)
-        #type(Key.ENTER)
         tabszone.waitVanish("1387133617238.png",FOREVER)
         exit()
         pass
