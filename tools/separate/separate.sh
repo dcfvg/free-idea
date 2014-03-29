@@ -20,6 +20,9 @@ function layerToFiles {
   
   for psd in `find $1 -iname "*.psd" -maxdepth 1 -type f`
   do
+    
+    echo $psd " -> " $filenameclean.$resutltype
+    
     dirname=$(dirname "$psd")
   	filename=$(basename "$psd")
   	extension="${filename##*.}"
