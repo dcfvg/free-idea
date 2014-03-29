@@ -12,7 +12,7 @@ sikuliIDE="/Applications/SikuliX-IDE.app/Contents/runIDE"
 
 sourcetype="gif"
 sourcepatern="Page"
-resutltype="gif"
+resutltype="png"
 
 mkdir $scans_done
 mkdir $scans_psd
@@ -48,7 +48,7 @@ do
 		echo $filename
 		open -a Adobe\ Photoshop\ CC.app $scan 
 		$sikuliIDE -r sepa.sikuli
-		
+				
 		mv $scan $scans_done"/done/"$filename  # move source to done
 	fi
 	rm -r $result"/*/*-0."$resutltype
