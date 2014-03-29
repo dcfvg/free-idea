@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+# set -x
 
 assets=$(pwd)"/../../assets/"
 scans=$assets"source/"
@@ -29,7 +29,7 @@ function layerToFiles {
   	filenameclean="${filename%.*}"
   	
   	mkdir -v $result$filenameclean
-  	convert $scans/$filenameclean.psd $result$filenameclean/$filenameclean-%d.$resutltype
+  	convert -monitor $scans/$filenameclean.psd $result$filenameclean/$filenameclean-%d.$resutltype
 		mv $scans/$filenameclean.psd $scans_psd/$filenameclean.psd # archive PSD
 		
   done
