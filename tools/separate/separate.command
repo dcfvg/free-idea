@@ -1,2 +1,2 @@
-cd /Users/etudiant/Desktop/separate
-bash separate.sh 
+cd $(pwd)
+bash separate.sh
