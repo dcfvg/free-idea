@@ -1,7 +1,6 @@
 #!/bin/bash
 set -x
 
- 
 assets      = $(pwd)"/../../assets/"
 scans       = $assets"source/"
 result      = $assets"result/"
@@ -12,14 +11,14 @@ sikuliIDE="/Applications/SikuliX-IDE.app/Contents/runIDE"
 
 sourcetype="gif"
 sourcepatern="Page"
-resutltype="png"
+resutltype="gif"
 
 mkdir $scans_done
 mkdir $scans_psd
 
 function layerToFiles {
   
-  for psd in `find $scans -iname "*.psd" -maxdepth 1 -type f`
+  for psd in `find $1 -iname "*.psd" -maxdepth 1 -type f`
   do
     dirname=$(dirname "$psd")
   	filename=$(basename "$psd")
@@ -32,11 +31,10 @@ function layerToFiles {
 		
   done
 }
-
 for scan in `find $scans -iname "*.$sourcetype" -maxdepth 1 -type f -exec du {} \; | sort -n`
 do
   
-  layerToFiles
+  layerToFiles $scans
   
 	dirname=$(dirname "$scan")
 	filename=$(basename "$scan")
@@ -46,9 +44,10 @@ do
 	if [[ "$filename" == *$sourcepatern* ]]
 	then
 		echo $filename
+		
 		open -a Adobe\ Photoshop\ CC.app $scan 
 		$sikuliIDE -r sepa.sikuli
-				
+		
 		mv $scan $scans_done"/done/"$filename  # move source to done
 	fi
 	rm -r $result"/*/*-0."$resutltype
