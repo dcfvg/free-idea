@@ -9,7 +9,7 @@ sikuliIDE="/Applications/SikuliX-IDE.app/Contents/runIDE"
 
 sourcetype="gif"
 sourcepatern="Page"
-resutltype="gif"
+resutltype="png"
 
 for scan in `find $scans -iname "*.$sourcetype" -maxdepth 1 -type f -exec du {} \; | sort -n`
 do
@@ -26,11 +26,11 @@ do
 
 		mkdir -v $result$filenameclean
 		
-		convert $dirname/$filenameclean.psd $result$filenameclean/$filenameclean-%d.$resutltype
+		convert $dirname/$filenameclean.psd $result$filenameclean/$filenameclean-%d"."$resutltype
 		rm $dirname/$filenameclean.psd
 		
 		mv $scan $dirname"/done/"$filename
 	fi
-	rm -r $result/*/*-0.$resutltype
+	rm -r $result"/*/*-0."$resutltype
 	
 done

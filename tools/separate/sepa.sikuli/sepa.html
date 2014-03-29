@@ -71,22 +71,24 @@
 </div>
 <pre class="sikuli-code">
 Settings.MoveMouseDelay = <span class="dig">0</span>
-workspace = Region(<span class="dig">105</span>,<span class="dig">145</span>,<span class="dig">1219</span>,<span class="dig">835</span>)
-layerzone = Region(<span class="dig">1409</span>,<span class="dig">430</span>,<span class="dig">272</span>,<span class="dig">620</span>)
+workspace = Region(<span class="dig">41</span>,<span class="dig">99</span>,<span class="dig">1347</span>,<span class="dig">925</span>)
+layerzone = Region(<span class="dig">1409</span>,<span class="dig">519</span>,<span class="dig">266</span>,<span class="dig">478</span>)
 tabszone = Region(<span class="dig">40</span>,<span class="dig">77</span>,<span class="dig">24</span>,<span class="dig">22</span>)
 blkpx = <img src="1390149570064.png" />
 
 <span class="cmt"># english keyboard enable
 </span>
 <span class="kw">def</span> findBlackPixel():
+    <span class="skw">type</span>(<span class="str">"w"</span>) <span class="cmt"># magic wand</span>
     workspace.<span class="skw">click</span>(blkpx)
 
 <span class="kw">def</span> init():
     layerzone.<span class="skw">wait</span>(<img src="1387127441955.png" />,FOREVER)
     switchApp(<span class="str">"Adobe Photoshop CC"</span>)
     <span class="skw">type</span>(Key.F1, KeyModifier.CMD)
-    <span class="skw">wait</span>(<span class="dig">2</span>)
+    <span class="skw">wait</span>(<span class="dig">1.5</span>)
     <span class="skw">type</span>(<span class="str">"0"</span>, KeyModifier.CMD)
+    <span class="skw">wait</span>(<span class="dig">1</span>)
     <span class="skw">type</span>(<span class="str">"w"</span>) <span class="cmt"># magic wand</span>
 init()
 
@@ -95,7 +97,7 @@ init()
         findBlackPixel()
         <span class="skw">wait</span>(<span class="dig">0.2</span>)
         <span class="skw">type</span>(Key.F2, KeyModifier.CMD)
-        <span class="skw">wait</span>(<span class="dig">1</span>)
+        <span class="skw">wait</span>(<span class="dig">0.8</span>)
         <span class="skw">type</span>(Key.ENTER)
         <span class="kw">pass</span>
 
