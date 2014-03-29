@@ -11,7 +11,7 @@ sikuliIDE="/Applications/SikuliX-IDE.app/Contents/runIDE"
 
 sourcetype="gif"
 sourcepatern="Page"
-resutltype="gif"
+resutltype="png"
 
 mkdir $scans_done
 mkdir $scans_psd
