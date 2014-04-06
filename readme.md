@@ -1,6 +1,8 @@
 Free Idea
 ====
 
+![img](https://pbs.twimg.com/media/BkUMoHQIMAAr0I4.jpg)
+
 À partir d’un stock de dessins préalablement découpés en milliers de parties, _free idea_ recompose de nouveaux dessins.
 
 ## Shortcuts
