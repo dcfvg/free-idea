@@ -1,7 +1,7 @@
 <?php
 
 $GLOBALS['clusterSize'] = 2;
-$GLOBALS['maxTry'] = 3;
+$GLOBALS['maxTry'] = 50;
 $GLOBALS['cache'] = "assets/cache/";
 
 function sortBySize(){
