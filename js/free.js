@@ -39,26 +39,41 @@ $(function() {
     $("#select").css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
   }
   function init_camera(){
-		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-		
-		window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
-		if (navigator.getUserMedia && window.URL) {
-			var video = document.getElementById('my_camera');
+    // navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    navigator.getUserMedia = ( navigator.getUserMedia ||
+                               navigator.webkitGetUserMedia ||
+                               navigator.mozGetUserMedia ||
+                               navigator.msGetUserMedia);
 
-			navigator.getUserMedia({
-				"audio": false,
-				"video": { "mandatory": { "minWidth": vid_h, "minHeight": vid_h } }
-			},
-			function(stream) { // got access, attach stream to video
-				video.src = window.URL.createObjectURL( stream ) || stream;
-			});
-		}
-		else {
-			alert("getUserMedia not supported on your machine!");
-		}
+    window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
+    if (navigator.getUserMedia && window.URL) {
+      var video = document.getElementById('my_camera');
+
+      navigator.getUserMedia(
+        // constraints
+        {
+          "audio": false,
+          "video": { "mandatory": { "minWidth": vid_h, "minHeight": vid_h } }
+        },
+        // successCallback
+        function(stream) { // got access, attach stream to video
+          video.src = window.URL.createObjectURL( stream ) || stream;
+        },
+        // errorCallback
+        function(err) {
+           console.log("The following error occured: " + err);
+        }
+      );
+    }
+    else {
+      alert("getUserMedia not supported on your machine!");
+    }
   }
-  function init(){  }
+  function init(){ 
+		init_camera();
+	}
   var 
   ajax_url = "call.php",
   currentMousePos = { x: -1, y: -1 },
