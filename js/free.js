@@ -72,7 +72,7 @@ $(function() {
     }
   }
   function init(){ 
-		init_camera();
+		//init_camera();
 	}
   var 
   ajax_url = "call.php",
