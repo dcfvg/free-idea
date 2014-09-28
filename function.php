@@ -1,18 +1,19 @@
 <?php
 
-$GLOBALS['clusterSize'] = 2;
-$GLOBALS['maxTry'] = 50;
+$GLOBALS['clusterSize'] = 1;
+$GLOBALS['maxTry'] = 100;
 $GLOBALS['cache'] = "assets/cache/";
 
 function sortBySize(){
+  $p=0;
   
   ini_set('memory_limit', '-1');
   set_time_limit(6000);
   
-  $cache = "assets/cache";
+  $cache = $GLOBALS['cache'];
   if(!file_exists($cache)) mkdir($cache);
   
-  $files = glob("assets/separate-result-2/IMG_*/*.png");
+  $files = glob("assets/separate-result/IMG_*/*.png");
   foreach ($files as $id => $file) {
 
     $s = aproxSize(getimagesize($file));
@@ -27,6 +28,7 @@ function sortBySize(){
   }
   echo '<h1 id="f5">'.count($files)." (+".$p.")         <h1>";
 }
+
 function aproxSize($s){
   $s[0] = bzero(abs(round($s[0],-$GLOBALS['clusterSize'])));
   $s[1] = bzero(abs(round($s[1],-$GLOBALS['clusterSize'])));
@@ -106,6 +108,17 @@ function getclosetratio(){
   if ($record_ratio > 0) {
     echo '<img src="'.$record_filename.'" height=150px><br>';
   }
+}
+function listShapes($w, $h){
+
+  global $step, $cache, $limit;
+
+  $s = bzero($w * $step)."x".bzero($h * $step);
+
+  $tmp = glob($cache.'/'.$s.'/IMG_*');
+  array_splice($tmp, $limit);
+
+  return $tmp;
 }
 
 ?>
