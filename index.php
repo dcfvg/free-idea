@@ -14,7 +14,7 @@
     <meta charset="utf-8">
     <title>free ideas</title>
     <link rel="stylesheet" href="css/jquery-ui.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/screen.css">
   </head>
   <body id="mainApp">
   	<video class="isight" id="my_camera" autoplay="autoplay"></video>
