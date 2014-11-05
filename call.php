@@ -1,6 +1,6 @@
 <?php
 
-$blacklist_cache = "assets/cache.dat";
+$blacklist_cache = "content/cache.dat";
 
 session_start();
 if(!isset($_SESSION["history"])) $_SESSION["history"][] = 0; 

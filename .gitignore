@@ -23,3 +23,6 @@
 *btsync*
 
 *.tmproj
+/content/
+
+/sources/
