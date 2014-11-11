@@ -20,10 +20,12 @@ if(isset($_POST["query"])) {
   $_SESSION["history"][] = $part;
 
   // $result["history"] = $_SESSION["history"];
-  $result["part"] = $part;
+  $result["id"]        = basename($part,'.png');
+  $result["part"]      = $part;
   $result["duplicate"] = array_not_unique($_SESSION["history"]);
-  $result["trys"] = $find["trys"];
-  $result["querys"] = $find["querys"];
+  $result["trys"]      = $find["trys"];
+  $result["querys"]    = $find["querys"];
+  $result["size"]     = getimagesize($part);
   
 }
 if(isset($_POST["blacklist"])){

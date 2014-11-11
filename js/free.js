@@ -12,11 +12,17 @@ $(function() {
       data = JSON.parse(data);    
       if(data.part){
         $paper
-          .append('<img class="draggable" src="'+data.part+'">')
+          .append('<img '+data.size[3]+' class="draggable"id="'+data.id+'" src="'+data.part+'">')
           .find('img:last-child()')
           .css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
-          .draggable({disabled: true, start: function(event, ui) { $(this).css("z-index", z++); }})
+          .draggable({disabled: true, start: function(event, ui) { 
+            $(this).css("z-index", z++); 
+            lastSelected = $(this).attr("id");
+            }}
+          )
           .draggable('enable');
+
+          lastSelected = data.id;
       }else{
         console.log("no result");
       }
@@ -24,7 +30,19 @@ $(function() {
     });
   }
   function removeLastPart(){
-    $paper.find('img:last-child()').remove()
+    $paper.find('img#'+lastSelected).remove();
+  }
+  function queryFromDom(selector){
+
+
+    var current = $paper.find('img#'+lastSelected);
+
+    console.log(selector,
+    current,
+    current.attr("id"),
+    current.attr("width"),
+    current.position()
+    );
   }
   function addToBlackList(file){
     var posting = $.post(ajax_url, { blacklist: file } );
@@ -84,7 +102,8 @@ $(function() {
   draw_dot = false,
   draw_around = false,
   $paper = $("#drawZone"),
-  $video = $( "#my_camera" ), vid_h=1080,vid_w=1920;
+  $video = $( "#my_camera" ), vid_h=1080,vid_w=1920,
+  lastSelected;
   
   // init 
   
@@ -114,7 +133,7 @@ $(function() {
     if(draw_around && draw && moves > moves_max){
       startMousePos.x = currentMousePos.x;
       startMousePos.y = currentMousePos.y;
-      get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );
+      get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y));
       moves = 0;
     }
   })
@@ -136,8 +155,9 @@ $(function() {
     }
   })
   .keypress(function( event ){
-    //console.log(event.which);≤
-    // r -> rm last part
+    //console.log(event.which);
+
+    // r -> rm last selected part
     if ( event.which == 114 ) removeLastPart(); 
     // d -> draw with dot 
     if ( event.which == 100 ) draw_dot = !draw_dot;
@@ -151,8 +171,10 @@ $(function() {
     
     // s -> change last part
     if ( event.which == 115 ){
+            queryFromDom(lastSelected);
+
       removeLastPart();
-      get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y) );
+      get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y));
     };
     // b -> add to black list
     if ( event.which == 98 ){
