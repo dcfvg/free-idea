@@ -1,4 +1,7 @@
 $(function() {
+  
+  // functions
+
   function randomPlacement(){
     $('img.draggable').each(function(i,el){
       var tLeft = Math.floor(Math.random()*6000),
@@ -92,6 +95,9 @@ $(function() {
   function init(){ 
 		//init_camera();
 	}
+
+  // vars
+
   var 
   ajax_url = "call.php",
   currentMousePos = { x: -1, y: -1 },
@@ -171,7 +177,7 @@ $(function() {
     
     // s -> change last part
     if ( event.which == 115 ){
-            queryFromDom(lastSelected);
+      queryFromDom(lastSelected);
 
       removeLastPart();
       get_file((endMousePos.x-startMousePos.x)+"x"+(endMousePos.y-startMousePos.y));

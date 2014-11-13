@@ -25,15 +25,13 @@ if(isset($_POST["query"])) {
   $result["duplicate"] = array_not_unique($_SESSION["history"]);
   $result["trys"]      = $find["trys"];
   $result["querys"]    = $find["querys"];
-  $result["size"]     = getimagesize($part);
-  
+  $result["size"]      = getimagesize($part);
 }
+
 if(isset($_POST["blacklist"])){
   $_SESSION["blacklist"][] = $_POST["blacklist"];
-
   $_SESSION["blacklist"] = array_merge(array_unique($_SESSION["blacklist"]));
   file_put_contents($blacklist_cache, serialize($_SESSION["blacklist"]));
-  
   $result["blacklist"] = $_SESSION["blacklist"];
 }
 
