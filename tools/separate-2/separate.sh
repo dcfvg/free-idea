@@ -4,35 +4,76 @@
 now=$(date +"%y.%m.%d-%H.%M.%S")
 offset=3
 
+ext=".mpc"
 # path definition
-scan=$1
-fscan=$(basename $scan)
+fscan=$(basename $1)
 scanid=${fscan%.*}
 
 cache="cache/"
 scandir="scan/"
 resultdir="result/"
 
-BWbmp="$cache$scanid-bw.bmp"
-greyscale="$cache$scanid-grey.png"
+scan=$cache"scan.$ext"
+bw2bit=$cache"bw.bmp"
 
-wandRes="$cache$scanid-wandres.png"
+grey=$cache"grey.$ext"
+mask=$cache"mask.$ext"
+imask=$cache"imask.$ext"
+
+wandRes=$cache"wandres.$ext"
 result="$resultdir$scanid-$now.png"
 
-# create bitmap version 
-convert -auto-level -colors 2 +dither -type bilevel $scan $BWbmp  
+i=0
 
-convert -auto-gamma -auto-level -colorspace Gray -colors 16 $scan $greyscale  
+function findAndExtract() {
+	
+	
+	((i++))
+	
+	id=`printf %04d $i`
+	
+	result="$resultdir$scanid-$id.png"
+	
+	echo "—--"
+	echo "!!! part #$i"
+	echo "[?] looking for a black pixel"
+	
+	position=$(convert "$bw2bit" txt:- | grep "black" | head -n 1)
+	position="${position%%:*}"
+	IFS=', ' read -a pos <<< "$position"
+	wandPos=$((pos[0]))","$((pos[1]+$offset)) # got down 
 
+	#wandPos="1631,626"
 
-# get first black pixel
-position=$(convert "$BWbmp" txt:- | grep "black" | head -n 1)
-position="${position%%:*}"
-IFS=', ' read -a pos <<< "$position"
-wandPos=$((pos[0]))","$((pos[1]+$offset)) # got down 
+	echo " /* wand at $wandPos"
+	magicwand $wandPos -t 50 -f mask -m transparent -c trans -r outside $grey $mask
 
-echo "wand at $wandPos"
-magicwand 1631,626 -t 60 -f image -m transparent -c trans $greyscale $wandRes
+	echo "->> mask processing"
+	convert $mask -channel rgba \
+		-fill white -opaque none \
+		-transparent black \
+		-fill black -opaque white $imask
 
-# crop the result
-convert -fuzz 30% -trim $wandRes $result
+	echo "/-/ apply masks"
+	composite -compose copy_opacity $mask $scan $wandRes 		# extract
+	
+	composite -compose copy_opacity $imask $bw2bit $bw2bit  # delete
+	composite -compose copy_opacity $imask $grey $grey			#
+	
+	convert -flatten $bw2bit $bw2bit
+	convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
+
+	echo "[ ] crop result "
+	convert -fuzz 30% -trim $wandRes $result
+}
+
+echo "starting $1 conversion"
+
+echo "create bitmaps version"
+convert $1 $scan
+convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
+convert -auto-gamma -auto-level -colorspace Gray -colors 16 $scan $grey  
+
+while true; do 
+	findAndExtract
+done
