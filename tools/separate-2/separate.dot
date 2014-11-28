@@ -1,0 +1,29 @@
+digraph {
+	
+	rankdir="LR"
+	
+	subgraph {
+		node[shape="note"]
+		jpeg
+		png
+		bitmap
+	}
+	subgraph {
+		node[shape="egg"]
+		scan
+	}
+	subgraph {
+		node[shape="folder"]
+		results
+	}
+	
+	scan -> jpeg -> level -> bitmap
+	bitmap -> magicwand -> png -> part [color=blue]
+	
+	level -> "remove\nbackground" -> hue -> png
+	trim -> results
+	
+	part -> bitmap [label=" delete" color=blue]
+	part -> trim 
+	
+}
