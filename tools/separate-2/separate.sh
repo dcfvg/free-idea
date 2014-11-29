@@ -2,7 +2,7 @@
 # set -x
 
 now=$(date +"%y.%m.%d-%H.%M.%S")
-offset=3
+offset=0
 margin=500
 
 ext=".mpc"
@@ -17,7 +17,6 @@ resultdir="result/"
 scan=$cache"scan.$ext"
 bw2bit=$cache"bw.bmp"
 
-grey=$cache"grey.$ext"
 mask=$cache"mask.$ext"
 imask=$cache"imask.$ext"
 masktrim=$cache"masktrim.$ext"
@@ -35,7 +34,7 @@ function findAndExtract() {
 	result="$resultdir$scanid-$id.png"
 	
 	echo "—--"
-	echo "GO! part #$i"
+	echo "    part #$i"
 	echo "[?] looking for a black pixel"
 	
 	position=$(convert "$bw2bit" txt:- | grep "black" | head -n 1)
@@ -49,9 +48,9 @@ function findAndExtract() {
 	if [ "$color" == "black" ]
 		then
 			
-			magicwand $wandPos -t 70 -f mask -m transparent -c trans -r outside $grey $mask
+			magicwand $wandPos -t 0 -f mask -m transparent -c trans -r outside $bw2bit $mask
 			
-			convert -fuzz 30% -trim $mask $masktrim
+			convert -fuzz 0% -trim +repage $mask $masktrim
 			
 			mh=$(identify -format "%[fx:h]" $masktrim)
 			mw=$(identify -format "%[fx:w]" $masktrim)
@@ -59,8 +58,7 @@ function findAndExtract() {
 			sch=$(identify -format "%[fx:h]" $scan)
 			scw=$(identify -format "%[fx:w]" $scan)
 			
-			
-			if (( "$mh" < $((scw-$margin)) )) #[[ $(($mh)) < 3000 ]] # &&  [[ $(($mw)) < $((scw-$margin)) ]]
+			if (( "$mh" < $((scw-$margin)) ))
 				then
 				
 					echo "->> mask processing ($mh x $mw)"
@@ -70,24 +68,20 @@ function findAndExtract() {
 						-fill black -opaque white $imask
 
 					echo "-// apply masks"
-					composite -compose copy_opacity $mask $scan $wandRes 		# extract
-
+					composite -compose copy_opacity  $mask $scan $wandRes 		# extract
+					
 					composite -compose copy_opacity $imask $bw2bit $bw2bit  # delete
-					composite -compose copy_opacity $imask $grey $grey			#
-
-					convert -background white -alpha remove $bw2bit $bw2bit
-					convert -background white -alpha remove $grey $grey
+					convert -background white -alpha remove $bw2bit $bw2bit #
 					
 					cropsize=$scw"x"$((sch-pos[1]))"+0+"$((pos[1]))
 					echo "[ ] crop research zone ($cropsize)"
 					convert -crop $cropsize +repage $bw2bit $bw2bit
-					convert -crop $cropsize +repage $grey $grey
 					convert -crop $cropsize +repage $scan $scan
 					
 					echo "[ ] crop result "
-					convert -fuzz 30% -trim $wandRes $result
+					convert -fuzz 30% -trim -background white -alpha remove -fuzz 60% -transparent white $wandRes $result
 
-				else
+				else 
 					echo "███ mask is too large ! ($mh x $mw)"
 					eraser
 			fi
@@ -98,7 +92,7 @@ function findAndExtract() {
 	fi
 	
 	echo "[|] save log image "
-	convert -format jpg $grey $resultdir"/log-$id.jpg"
+	convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
 
 }
 function eraser(){
@@ -121,7 +115,6 @@ convert -fuzz 10% -trim +repage $1 $scan
 
 echo "create bitmaps version"
 convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
-convert -auto-gamma -auto-level -colorspace Gray -colors 16 $scan $grey
 convert -format jpg $grey $resultdir"/log-0000.jpg"
 
 while true; do 
