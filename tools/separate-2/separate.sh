@@ -41,56 +41,47 @@ function findAndExtract() {
 	position="${position%%:*}"
 	IFS=', ' read -a pos <<< "$position"
 	wandPos=$((pos[0]))","$((pos[1]+$offset)) # go down 
-	color=`convert $bw2bit -format "%[pixel:s.p{$wandPos}]" info:` # get the pixel color
 	
-	echo " /* try magicwand at $wandPos on $color pixel"
+	echo " /* try magicwand at $wandPos"
+
+
+	magicwand $wandPos -t 0 -f mask -m transparent -c trans -r outside $bw2bit $mask
+	convert -fuzz 0% -trim +repage $mask $masktrim
 	
-	if [ "$color" == "black" ]
+	mh=$(identify -format "%[fx:h]" $masktrim)
+	mw=$(identify -format "%[fx:w]" $masktrim)
+	
+	sch=$(identify -format "%[fx:h]" $scan)
+	scw=$(identify -format "%[fx:w]" $scan)
+	
+	if (( "$mh" < $((scw-$margin)) ))
 		then
-			
-			magicwand $wandPos -t 0 -f mask -m transparent -c trans -r outside $bw2bit $mask
-			
-			convert -fuzz 0% -trim +repage $mask $masktrim
-			
-			mh=$(identify -format "%[fx:h]" $masktrim)
-			mw=$(identify -format "%[fx:w]" $masktrim)
-			
-			sch=$(identify -format "%[fx:h]" $scan)
-			scw=$(identify -format "%[fx:w]" $scan)
-			
-			if (( "$mh" < $((scw-$margin)) ))
-				then
-				
-					echo "->> mask processing ($mh x $mw)"
-					convert $mask -channel rgba \
-						-fill white -opaque none \
-						-transparent black \
-						-fill black -opaque white $imask
-
-					echo "-// apply masks"
-					composite -compose copy_opacity  $mask $scan $wandRes 		# extract
-					
-					composite -compose copy_opacity $imask $bw2bit $bw2bit  # delete
-					convert -background white -alpha remove $bw2bit $bw2bit #
-					
-					cropsize=$scw"x"$((sch-pos[1]))"+0+"$((pos[1]))
-					echo "[ ] crop research zone ($cropsize)"
-					convert -crop $cropsize +repage $bw2bit $bw2bit
-					convert -crop $cropsize +repage $scan $scan
-					
-					echo "[ ] crop result "
-					convert -fuzz 30% -trim -background white -alpha remove -fuzz 60% -transparent white $wandRes $result
-
-				else 
-					echo "███ mask is too large ! ($mh x $mw)"
-					eraser
-			fi
 		
-		else
-			echo "███ pixel is $color !"
-			eraser		
+			echo "->> mask processing ($mh x $mw)"
+			convert $mask -channel rgba \
+				-fill white -opaque none \
+				-transparent black \
+				-fill black -opaque white $imask
+
+			echo "-// apply masks"
+			composite -compose copy_opacity  $mask $scan $wandRes 	# extract
+			
+			composite -compose copy_opacity $imask $bw2bit $bw2bit  # delete
+			convert -background white -alpha remove $bw2bit $bw2bit #
+			
+			cropsize=$scw"x"$((sch-pos[1]))"+0+"$((pos[1]))
+			echo "[ ] crop research zone ($cropsize)"
+			convert -crop $cropsize +repage $bw2bit $bw2bit
+			convert -crop $cropsize +repage $scan $scan
+			
+			echo "[ ] crop result "
+			convert -fuzz 30% -trim -background white -alpha remove -fuzz 60% -transparent white -resize 99% $wandRes $result
+
+		else 
+			echo "███ mask is too large ! ($mh x $mw)"
+			eraser
 	fi
-	
+
 	echo "[|] save log image "
 	convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
 
@@ -107,15 +98,10 @@ rm -rf $cache
 mkdir $cache
 
 convert -fuzz 10% -trim +repage $1 $scan
-# 
-# sch=$(identify -format "%[fx:h]" $scan)
-# scw=$(identify -format "%[fx:w]" $scan)
-# 
-# echo "trimmed scan size : $scw x $sch"
 
 echo "create bitmaps version"
 convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
-convert -format jpg $grey $resultdir"/log-0000.jpg"
+convert -format jpg $bw2bit $resultdir"/log-0000.jpg"
 
 while true; do 
 	findAndExtract
