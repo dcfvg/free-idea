@@ -3,7 +3,7 @@
 
 now=$(date +"%y.%m.%d-%H.%M.%S")
 offset=3
-margin=200
+margin=500
 
 ext=".mpc"
 # path definition
@@ -26,14 +26,7 @@ wandRes=$cache"wandres.$ext"
 result="$resultdir$scanid-$now.png"
 
 i=0
-
-sch=$(identify -format "%[fx:h]" $scan)
-scw=$(identify -format "%[fx:w]" $scan)
-
-echo "scan size : $sch x $scw"
-
 function findAndExtract() {
-	
 	
 	((i++))
 	
@@ -56,12 +49,16 @@ function findAndExtract() {
 	if [ "$color" == "black" ]
 		then
 			
-			magicwand $wandPos -t 50 -f mask -m transparent -c trans -r outside $grey $mask
+			magicwand $wandPos -t 70 -f mask -m transparent -c trans -r outside $grey $mask
 			
 			convert -fuzz 30% -trim $mask $masktrim
 			
 			mh=$(identify -format "%[fx:h]" $masktrim)
 			mw=$(identify -format "%[fx:w]" $masktrim)
+			
+			sch=$(identify -format "%[fx:h]" $scan)
+			scw=$(identify -format "%[fx:w]" $scan)
+			
 			
 			if (( "$mh" < $((scw-$margin)) )) #[[ $(($mh)) < 3000 ]] # &&  [[ $(($mw)) < $((scw-$margin)) ]]
 				then
@@ -80,37 +77,52 @@ function findAndExtract() {
 
 					convert -background white -alpha remove $bw2bit $bw2bit
 					convert -background white -alpha remove $grey $grey
-			
+					
+					cropsize=$scw"x"$((sch-pos[1]))"+0+"$((pos[1]))
+					echo "[ ] crop research zone ($cropsize)"
+					convert -crop $cropsize +repage $bw2bit $bw2bit
+					convert -crop $cropsize +repage $grey $grey
+					convert -crop $cropsize +repage $scan $scan
+					
 					echo "[ ] crop result "
 					convert -fuzz 30% -trim $wandRes $result
-				
+
 				else
-					echo "!!! mask is too large ! ($mh x $mw)"
+					echo "███ mask is too large ! ($mh x $mw)"
 					eraser
 			fi
 		
 		else
-			echo "!!! pixel is $color !"
+			echo "███ pixel is $color !"
 			eraser		
 	fi
 	
 	echo "[|] save log image "
-	convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
+	convert -format jpg $grey $resultdir"/log-$id.jpg"
 
 }
 function eraser(){
 	line="$((pos[0])),$((pos[1])) $wandPos"
 	convert -stroke white -draw "line $line" $bw2bit $bw2bit
-	echo "draw white line @($line)"
+	echo "███ draw white line @($line)"
 }
+
 echo "starting $1 conversion"
 
+rm -rf $cache
+mkdir $cache
+
+convert -fuzz 10% -trim +repage $1 $scan
+# 
+# sch=$(identify -format "%[fx:h]" $scan)
+# scw=$(identify -format "%[fx:w]" $scan)
+# 
+# echo "trimmed scan size : $scw x $sch"
 
 echo "create bitmaps version"
-convert $1 $scan
 convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
-convert -auto-gamma -auto-level -colorspace Gray -colors 16 $scan $grey  
-convert -format jpg $bw2bit $resultdir"/log-0000.jpg"
+convert -auto-gamma -auto-level -colorspace Gray -colors 16 $scan $grey
+convert -format jpg $grey $resultdir"/log-0000.jpg"
 
 while true; do 
 	findAndExtract
