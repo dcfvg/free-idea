@@ -3,7 +3,7 @@
 
 now=$(date +"%y.%m.%d-%H.%M.%S")
 margin=500
-border=0
+border=25
 
 ext=".mpc"
 
@@ -31,7 +31,7 @@ function findAndExtract() {
 	echo "—--"
 	echo "    part #$i"
 	
-	cropsize=$(convert $bw2bit -trim -format '%wx%h%O' info:)
+	cropsize=$(convert $bw2bit -fuzz 25% -trim -format '%wx%h%O' info:)
 	
 	echo "[ ] crop research zone ($cropsize)"
 	convert -crop $cropsize +repage $bw2bit $bw2bit
@@ -63,7 +63,7 @@ function findAndExtract() {
 		exit 0
 	fi
 
-	magicwand $wandPos -t 0 -f mask -m transparent -c trans -r outside $bw2bit $mask
+	magicwand $wandPos -t 25 -f mask -m transparent -c trans -r outside $bw2bit $mask
 	convert -fuzz 0% -trim +repage $mask $masktrim
 
 	echo "->> mask processing"
@@ -85,7 +85,6 @@ function findAndExtract() {
 echo "=== starting $1 conversion"
 
 model=$(identify -format %[exif:Model] $1)
-
 if [[ "$model" == *Doxie* ]] 
 then
 	rm -rf $cache
@@ -97,6 +96,7 @@ then
 	 -fuzz 25% -transparent white \
 	 -modulate 100,130,100 \
 	 -background white -alpha remove \
+	 +repage \
 	 $1 $scan
 
 	convert $scan $resultdir$scanid.png
