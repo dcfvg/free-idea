@@ -2,7 +2,6 @@
 # set -x
 
 now=$(date +"%y.%m.%d-%H.%M.%S")
-offset=0
 margin=500
 
 ext=".mpc"
@@ -36,12 +35,12 @@ function findAndExtract() {
 	
 	echo "—--"
 	echo "    part #$i"
-	echo "[?] looking for a black pixel"
 	
+	echo "[?] looking for a black pixel"
 	position=$(convert "$bw2bit" txt:- | grep "black" | head -n 1)
 	position="${position%%:*}"
 	IFS=', ' read -a pos <<< "$position"
-	wandPos=$((pos[0]))","$((pos[1]+$offset)) # go down 
+	wandPos=$((pos[0]))","$((pos[1])) # go down 
 	
 	echo " /* try magicwand at $wandPos"
 	
@@ -58,36 +57,29 @@ function findAndExtract() {
 	
 	sch=$(identify -format "%[fx:h]" $scan)
 	scw=$(identify -format "%[fx:w]" $scan)
-	
-	if (( "$mh" < $((scw-$margin)) ))
-		then
 		
-			echo "->> mask processing ($mh x $mw)"
-			convert $mask -channel rgba \
-				-fill white -opaque none \
-				-transparent black \
-				-fill black -opaque white $imask
+	echo "->> mask processing ($mh x $mw)"
+	convert $mask -channel rgba \
+		-fill white -opaque none \
+		-transparent black \
+		-fill black -opaque white $imask
 
-			echo "-// apply masks"
-			composite -compose copy_opacity  $mask $scan $wandRes 	# extract
+	echo "-// apply masks"
+	composite -compose copy_opacity  $mask $scan $wandRes 	# extract
+
+	composite -compose copy_opacity $imask $bw2bit $bw2bit  # delete
+	convert -background white -alpha remove $bw2bit $bw2bit #
 	
-			composite -compose copy_opacity $imask $bw2bit $bw2bit  # delete
-			convert -background white -alpha remove $bw2bit $bw2bit #
-			
-			#cropsize=$scw"x"$((sch-pos[1]))"+0+"$((pos[1]))
-			cropsize=$(convert $bw2bit -trim -format '%wx%h%O' info:)
-			
-			echo "[ ] crop research zone ($cropsize)"
-			convert -crop $cropsize +repage $bw2bit $bw2bit
-			convert -crop $cropsize +repage $scan $scan
-			
-			echo "[ ] trim and convert result "
-			convert -fuzz 30% -trim -background white -alpha remove -fuzz 30% -transparent white -resize 99% $wandRes $result
+	#cropsize=$scw"x"$((sch-pos[1]))"+0+"$((pos[1]))
+	cropsize=$(convert $bw2bit -trim -format '%wx%h%O' info:)
+	
+	echo "[ ] crop research zone ($cropsize)"
+	convert -crop $cropsize +repage $bw2bit $bw2bit
+	convert -crop $cropsize +repage $scan $scan
+	
+	echo "[ ] trim and convert result "
+	convert -fuzz 30% -trim -background white -alpha remove -fuzz 30% -transparent white -resize 99% $wandRes $result
 
-		else 
-			echo "███ mask is too large ! ($mh x $mw)"
-			eraser
-	fi
 
 	echo "[|] save log image "
 	convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
