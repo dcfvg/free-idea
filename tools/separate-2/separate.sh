@@ -6,13 +6,14 @@ offset=0
 margin=500
 
 ext=".mpc"
+
 # path definition
 fscan=$(basename $1)
 scanid=${fscan%.*}
 
 cache="cache/"
 scandir="scan/"
-resultdir="result/"
+resultdir="result/"$scanid"/"
 
 scan=$cache"scan.$ext"
 bw2bit=$cache"bw.bmp"
@@ -43,7 +44,11 @@ function findAndExtract() {
 	wandPos=$((pos[0]))","$((pos[1]+$offset)) # go down 
 	
 	echo " /* try magicwand at $wandPos"
-
+	
+	if [ "$wandPos" == "0,0" ]
+		then 
+		exit 0
+	fi
 
 	magicwand $wandPos -t 0 -f mask -m transparent -c trans -r outside $bw2bit $mask
 	convert -fuzz 0% -trim +repage $mask $masktrim
@@ -65,17 +70,19 @@ function findAndExtract() {
 
 			echo "-// apply masks"
 			composite -compose copy_opacity  $mask $scan $wandRes 	# extract
-			
+	
 			composite -compose copy_opacity $imask $bw2bit $bw2bit  # delete
 			convert -background white -alpha remove $bw2bit $bw2bit #
 			
-			cropsize=$scw"x"$((sch-pos[1]))"+0+"$((pos[1]))
+			#cropsize=$scw"x"$((sch-pos[1]))"+0+"$((pos[1]))
+			cropsize=$(convert $bw2bit -trim -format '%wx%h%O' info:)
+			
 			echo "[ ] crop research zone ($cropsize)"
 			convert -crop $cropsize +repage $bw2bit $bw2bit
 			convert -crop $cropsize +repage $scan $scan
 			
-			echo "[ ] crop result "
-			convert -fuzz 30% -trim -background white -alpha remove -fuzz 60% -transparent white -resize 99% $wandRes $result
+			echo "[ ] trim and convert result "
+			convert -fuzz 30% -trim -background white -alpha remove -fuzz 30% -transparent white -resize 99% $wandRes $result
 
 		else 
 			echo "███ mask is too large ! ($mh x $mw)"
@@ -84,7 +91,7 @@ function findAndExtract() {
 
 	echo "[|] save log image "
 	convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
-
+	
 }
 function eraser(){
 	line="$((pos[0])),$((pos[1])) $wandPos"
@@ -92,12 +99,23 @@ function eraser(){
 	echo "███ draw white line @($line)"
 }
 
+
+
 echo "starting $1 conversion"
 
 rm -rf $cache
-mkdir $cache
+mkdir $cache $resultdir
 
-convert -fuzz 10% -trim +repage $1 $scan
+border=25
+
+convert \
+ -fuzz 25% -transparent white \
+ -modulate 100,130,100 \
+ -crop +$border+$border -crop -$border-$border -border $borderx$border \
+ -fuzz 10% -trim +repage\
+ $1 $scan
+
+convert $scan $resultdir$scanid.png
 
 echo "create bitmaps version"
 convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
