@@ -56,6 +56,12 @@ function findAndExtract() {
 		then 
 		exit 0
 	fi
+	
+	if (( "$i" > 500 ))
+		then 
+		
+		exit 0
+	fi
 
 	magicwand $wandPos -t 0 -f mask -m transparent -c trans -r outside $bw2bit $mask
 	convert -fuzz 0% -trim +repage $mask $masktrim
@@ -78,22 +84,27 @@ function findAndExtract() {
 
 echo "=== starting $1 conversion"
 
-rm -rf $cache
-mkdir $cache $resultdir
+model=$(identify -format %[exif:Model] $1)
 
-echo "-#- scan clean "
-convert \
- -crop +$border+$border -crop -$border-$border -border $borderx$border \
- -fuzz 25% -transparent white \
- -modulate 100,130,100 \
- -background white -alpha remove \
- $1 $scan
+if [[ "$model" == *Doxie* ]] 
+then
+	rm -rf $cache
+	mkdir $cache $resultdir
 
-convert $scan $resultdir$scanid.png
+	echo "-#- scan clean "
+	convert \
+	 -crop +$border+$border -crop -$border-$border -border $borderx$border \
+	 -fuzz 25% -transparent white \
+	 -modulate 100,130,100 \
+	 -background white -alpha remove \
+	 $1 $scan
 
-echo "| | create bitmaps version"
-convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
+	convert $scan $resultdir$scanid.png
 
-while true; do 
-	findAndExtract
-done
+	echo "| | create bitmaps version"
+	convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
+
+	while true; do 
+		findAndExtract
+	done
+fi
