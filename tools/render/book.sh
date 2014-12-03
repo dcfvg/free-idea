@@ -1,4 +1,4 @@
-assets="../../assets"
+assets="../../content"
 cache="$assets/cache"
 output="$assets/posters"
 
@@ -18,8 +18,8 @@ do
   
   if( (( "$nb" > 10 )) ) ;then
     printf "\t$i/$nbdir\t$size\t$nb\t\n"
-    phantomjs rasterize.js \
-    "http://dev.free-idea.dcfvg.com/tools/dotdotdot.php?s=$size" \
+    phantomjs rasterize_pdf.js \
+    "http://dev.free-idea.dcfvg.com/tools/by-size-page.php?s=$size" \
     "$output/$size.pdf" \
     A5 0.4 \
     2>&1 | grep -v "userSpaceScaleFactor"

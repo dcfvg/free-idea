@@ -1,10 +1,15 @@
 <?php
-$cache = "../assets/cache/";
+
+//
+// generate page from the all parts book
+//
+
 include("../function.php");
+$cache = '../content/cache/';
 
 if(isset($_GET["s"])){
   $s = $_GET["s"];
-  
+
   $res = glob($cache.'/'.$s.'/IMG_*');
   // shuffle($res);
   

@@ -1,6 +1,7 @@
 <?php
-$cache = "../assets/cache/";
 include("../function.php");
+$cache = "../content/cache/";
+
 $total = count(glob($cache.'/*x*/IMG_*'));
 
 $step = pow(10,$GLOBALS['clusterSize']);

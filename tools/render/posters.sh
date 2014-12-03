@@ -34,7 +34,7 @@ do
 		  echo 	$message
 		  say 	$message
 
-		  phantomjs rasterize.js \
+		  phantomjs rasterize_png.js \
 		  "http://dev.free-idea.dcfvg.com/tools/by-size.php?w_max=$wmax&limit=$limit" \
 		  "$output/$size-$resolution-wmax-$wmax-limit-$limit" \
 		  $resolution $size

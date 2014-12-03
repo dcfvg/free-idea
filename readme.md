@@ -27,3 +27,9 @@ Free Idea
 
 `w` — start webcam
 
+## test version 
+http://free-idea.dcfvg.com
+
+## installation
+1. create cache folder `/content/cache/`
+2. add parts in `sources/separate-result/` with 1 folder per drawing (ex. `sources/separate-result/IMG_*****/****.png` )

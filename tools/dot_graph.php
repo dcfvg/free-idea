@@ -1,12 +1,12 @@
 <?php
   session_start();
 
-  $assets = "../assets/";
+  $assets = "../content/";
   $cache = $assets."cache/";
   
   include("../function.php");
   
-  $GLOBALS['cache'] = "../assets/cache/";
+  $GLOBALS['cache'] = "../content/cache/";
   
   $icons = glob("*.gif");
   
@@ -22,11 +22,11 @@
     
     node[style="", shape="none", color=royalblue]
     edge[color=royalblue, penwidth=2 , fontsize=20, fontname="myriadPro"]
-    layout=fdp
+    #layout=fdp
     size="33.1,46.8";
     ';
   
-  $nbitems = 80;
+  $nbitems = 200;
   
   for ($node=0; $node < $nbitems; $node++) {
 

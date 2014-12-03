@@ -1,9 +1,12 @@
 <?php
+
+// All parts sorted by size 
+
 ini_set('memory_limit', '-1');
 set_time_limit(6000);
 
 include("../function.php");
-$cache = "../assets/cache/";
+$cache = "../content/cache/";
 $step = pow(10,$GLOBALS['clusterSize']);
 
 $h_max = $_GET['h_max'] ?: 150;
@@ -20,7 +23,7 @@ for ($h=$h_min; $h < $h_max; $h++) {
 }
 
 $res = array_unique($res);
-//array_splice($res, 50000);
+array_splice($res, $limit);
 //print_r($res);
 
 foreach ($res as $id => $img) $tab .= '<img src="'.$img.'">';
