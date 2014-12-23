@@ -114,7 +114,7 @@ function listShapes($w, $h){
 	$s = bzero($w * $step)."x".bzero($h * $step);
 
 	$tmp = glob($cache.'/'.$s.'/IMG_*');
-	array_splice($tmp, $limit);
+	//array_splice($tmp, $limit);
 
 	return $tmp;
 }

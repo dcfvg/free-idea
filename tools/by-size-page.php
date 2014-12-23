@@ -13,7 +13,7 @@ if(isset($_GET["s"])){
   $res = glob($cache.'/'.$s.'/IMG_*');
   // shuffle($res);
   
-  array_splice($res, 50000);
+  //array_splice($res, 50000);
   foreach ($res as $id => $img) {
     $tab .= '<img src="'.$img.'">';
   }
