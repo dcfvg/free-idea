@@ -12,7 +12,6 @@ fscan=$(basename $1)
 scanid=${fscan%.*}
 
 cache="cache/"
-scandir="scan/"
 resultdir="result/"$scanid"/"
 
 scan=$cache"scan.$ext"
@@ -37,15 +36,15 @@ function findAndExtract() {
 	convert -crop $cropsize +repage $bw2bit $bw2bit
 	convert -crop $cropsize +repage $scan $scan
 
-	echo "[|] save log image "
-	convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
+	#echo "[|] save log image "
+	#convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
 	
 	((i++))
 	id=`printf %04d $i`
 	result="$resultdir$scanid-$id.png"
 	
 	echo "[?] looking for a black pixel"
-	position=$(convert "$bw2bit" txt:- | grep "black" | head -n 1)
+	position=$(convert "$bw2bit" txt:- | LC_ALL=C fgrep  "black" | head -n 1)
 	position="${position%%:*}"
 	IFS=', ' read -a pos <<< "$position"
 	wandPos=$((pos[0]))","$((pos[1])) # go down 
@@ -63,7 +62,7 @@ function findAndExtract() {
 		exit 0
 	fi
 
-	magicwand $wandPos -t 25 -f mask -m transparent -c trans -r outside $bw2bit $mask
+	./magicwand $wandPos -t 25 -f mask -m transparent -c trans -r outside $bw2bit $mask
 	convert -fuzz 0% -trim +repage $mask $masktrim
 
 	echo "->> mask processing"
@@ -88,7 +87,7 @@ model=$(identify -format %[exif:Model] $1)
 if [[ "$model" == *Doxie* ]] 
 then
 	rm -rf $cache
-	mkdir $cache $resultdir
+	mkdir $cache "result/" $resultdir
 
 	echo "-#- scan clean "
 	convert \
