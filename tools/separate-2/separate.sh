@@ -24,10 +24,10 @@ masktrim=$cache"masktrim.$ext"
 wandRes=$cache"wandres.$ext"
 result="$resultdir$scanid-$now.png"
 
-i=0
+i=1
 function findAndExtract() {
 	
-	echo "—--"
+	echo "    "
 	echo "    part #$i"
 	
 	cropsize=$(convert $bw2bit -fuzz 25% -trim -format '%wx%h%O' info:)
@@ -39,7 +39,6 @@ function findAndExtract() {
 	#echo "[|] save log image "
 	#convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
 	
-	((i++))
 	id=`printf %04d $i`
 	result="$resultdir$scanid-$id.png"
 	
@@ -57,8 +56,7 @@ function findAndExtract() {
 	fi
 	
 	if (( "$i" > 500 ))
-		then 
-		
+		then
 		exit 0
 	fi
 
@@ -72,13 +70,25 @@ function findAndExtract() {
 		-fill black -opaque white $imask
 
 	echo "-// apply masks"
-	composite -compose copy_opacity  $mask $scan $wandRes 	# extract
+	composite -compose copy_opacity $mask $scan $wandRes 	# extract
 	composite -compose copy_opacity $imask $bw2bit $bw2bit  # delete
 	convert -background white -alpha remove $bw2bit $bw2bit #
 	
-	echo "[ ] trim and convert result "
-	convert -fuzz 30% -trim -background white -alpha remove -fuzz 30% -transparent white -resize 99% $wandRes $result
-	
+	echo "[ ] trim result"
+	convert -fuzz 30% -trim -background white -alpha remove $wandRes $wandRes
+
+	w=$(identify -format %[fx:w] $wandRes)
+	h=$(identify -format %[fx:h] $wandRes)
+
+	surface=$(( $w * $h ))
+	if (( "$surface" < 100 ))
+		then
+			echo " X  cancel, result surface is too small ($w x $h px : $surface px2 )"
+		else
+			echo " ~  remove background and save ($w x $h)"
+			convert -fuzz 30% -transparent white -resize 99% $wandRes $result
+			((i++))
+	fi
 }
 
 echo "=== starting $1 conversion"

@@ -1,4 +1,4 @@
-localDB=/Users/benoit/Dropbox/scans-notes/conference 
+localDB=/Users/benoit/Dropbox/scans-notes/conference
 
 for step in `find ${1:-$localDB} -iname "*.JPG"  -exec ls -l {} \; | awk '{ print $5,"",$9 }'|sort -n`
 do
