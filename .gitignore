@@ -34,3 +34,11 @@
 /tools/separate-2/cache
 
 /tools/separate-2/result-test/
+
+cache-*
+
+*.cache
+
+*.DS_Store
+
+*.mpc

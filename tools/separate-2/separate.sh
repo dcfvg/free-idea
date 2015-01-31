@@ -11,7 +11,7 @@ ext=".mpc"
 fscan=$(basename $1)
 scanid=${fscan%.*}
 
-cache="cache/"
+cache="cache-"$scanid"/"
 resultdir="result/"$scanid"/"
 
 scan=$cache"scan.$ext"
@@ -116,7 +116,7 @@ echo "=== starting $1 conversion"
 model=$(identify -format %[exif:Model] $1)
 if [[ "$model" == *Doxie* ]] 
 then
-	rm -rf $cache
+
 	mkdir $cache "result/" $resultdir
 
 	echo "-#- scan clean "
@@ -136,4 +136,5 @@ then
 	while true; do 
 		findAndExtract
 	done
+	rm -rf $cache
 fi
