@@ -11,8 +11,8 @@ ext=".mpc"
 fscan=$(basename $1)
 scanid=${fscan%.*}
 
-cache="cache-"$scanid"/"
-resultdir="result/"$scanid"/"
+cache="cache/"$scanid"/"
+resultdir="../../sources/separate-result/"$scanid"/"
 
 scan=$cache"scan.$ext"
 bw2bit=$cache"bw.bmp"
@@ -26,6 +26,8 @@ result="$resultdir$scanid-$now.png"
 
 i=1
 try=1
+
+maxWidth=1000 #max scan size
 
 wandPosPrev=""
 wandPos=""
@@ -117,7 +119,7 @@ model=$(identify -format %[exif:Model] $1)
 if [[ "$model" == *Doxie* ]] 
 then
 
-	mkdir $cache "result/" $resultdir
+	mkdir "cache" $cache "result/" "result/done/" $resultdir
 
 	echo "-#- scan clean "
 	convert \
@@ -126,9 +128,13 @@ then
 	 -modulate 100,130,100 \
 	 -background white -alpha remove \
 	 +repage \
+	 -resize 'x'$maxWidth\
 	 $1 $scan
 
-	convert $scan $resultdir$scanid.png
+	mv $1 "result/done/"
+
+	# keep full draw
+	# convert $scan $resultdir$scanid.png
 
 	echo "| | create bitmaps version"
 	convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
@@ -136,5 +142,8 @@ then
 	while true; do 
 		findAndExtract
 	done
+	mv $1 "result/done/"
 	rm -rf $cache
+	curl -L "http://dev.free-idea.dcfvg.com/?f5=1"
+
 fi

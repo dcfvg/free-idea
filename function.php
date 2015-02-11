@@ -1,7 +1,7 @@
 <?php
 
-$GLOBALS['clusterSize'] = 1;
-$GLOBALS['maxTry'] = 5000;
+$GLOBALS['clusterSize'] = 2;
+$GLOBALS['maxTry'] = 1000;
 $GLOBALS['cache'] = "content/cache/";
 
 function sortBySize(){
@@ -13,7 +13,7 @@ function sortBySize(){
 	$cache = $GLOBALS['cache'];
 	if(!file_exists($cache)) mkdir($cache);
 	
-	$files = glob("sources/separate-result/IMG_*/*.png");
+	$files = glob("sources/separate-result/IMG_*/*-*.png");
 	foreach ($files as $id => $file) {
 
 		$s = aproxSize(getimagesize($file));
@@ -26,7 +26,8 @@ function sortBySize(){
 			$p++;
 		}
 	}
-	echo '<h1 id="f5">'.count($files)." (+".$p.")<h1>";
+	echo 'sort part by size :: '.count($files)." (+".$p.")";
+	die();
 }
 function aproxSize($s){
 	$s[0] = bzero(abs(round($s[0],-$GLOBALS['clusterSize'])));
@@ -50,11 +51,31 @@ function findNearestPart($s){
 		if($flip) $s[0] = bzero(max(0,$s[0]-$step));
 		else      $s[1] = bzero(max(0,$s[1]-$step));
 		
-		$exclude = array_unique(array_merge($_SESSION["blacklist"],$_SESSION["history"]));
-		$parts = array_diff(glob($GLOBALS['cache'].$s[0]."x".$s[1]."/*.png"),$exclude);
+		$exclude = array();
+		//$exclude = array_unique(array_merge($_SESSION["blacklist"],$_SESSION["history"]));
+		$parts = array_diff(glob($GLOBALS['cache'].$s[0]."x".$s[1]."/*.png"), $exclude);
 		
 		$t++;
 	}
+
+	if($t >= $GLOBALS['maxTry']){
+		if(empty($parts)){ 
+			$parts = glob($GLOBALS['cache'].$s[0]."x*/*.png");
+			$t++;
+			$res["querys"][] = "all-w";
+		};
+		if(empty($parts)){ 
+			$parts = glob($GLOBALS['cache']."*x".$s[1]."/*.png");
+			$t++;
+			$res["querys"][] = "all-h";
+		};
+		if(empty($parts)){ 
+			$parts = glob($GLOBALS['cache']."*x*/*.png");
+			$t++;
+			$res["querys"][] = "all-a";
+		};
+	}
+
 	shuffle($parts);
 	
 	$res["result"] = $parts[0];

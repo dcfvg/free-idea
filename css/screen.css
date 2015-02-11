@@ -1,15 +1,6 @@
 /*
  * www.g-u-i.net
  */
-.clear-after:after {
-  clear: both;
-  content: '';
-  display: block;
-  height: 0px;
-  overflow: hidden;
-  visibility: hidden;
-  width: 0px;
-}
 body,
 html,
 #drawZone {
@@ -30,9 +21,11 @@ html,
   cursor: crosshair;
 }
 #select {
-  background-image: url('/grid.gif');
-  background-repeat: repeat;
+  background-image: linear-gradient(45deg, #000000 25%, transparent 25%, transparent 75%, #000000 75%, #000000), linear-gradient(45deg, #000000 25%, transparent 25%, transparent 75%, #000000 75%, #000000);
+  background-size: 20px 20px;
+  background-position: 0 0, 30px 30px;
   opacity: .2;
+  z-index: 0;
 }
 /* TOOLS */
 #blacklist {
