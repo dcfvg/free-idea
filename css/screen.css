@@ -21,6 +21,9 @@ html,
 #message ul {
   list-style: decimal-leading-zero;
 }
+#message.presmod {
+  display: none;
+}
 #message.hide {
   opacity: 0;
   -webkit-transition: opacity 0.5s ease-in-out;
