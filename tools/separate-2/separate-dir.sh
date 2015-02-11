@@ -1,7 +1,7 @@
 localDB=/Users/benoit/Dropbox/scans-notes/conference
 rm -rf cache*
 
-for step in `find ${1:-$localDB} -iname "*.JPG"  -exec ls -l {} \; | awk '{ print $5,"",$9 }'|sort -n`
+for step in `find ${1:-$localDB} -iname "*.JP*G"  -exec ls -l {} \; | awk '{ print $5,"",$9 }'|sort -n`
 do
 	
 	fscan=$(basename $step)

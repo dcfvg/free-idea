@@ -24,6 +24,8 @@ masktrim=$cache"masktrim.$ext"
 wandRes=$cache"wandres.$ext"
 result="$resultdir$scanid-$now.png"
 
+resultDone="result/done/"
+
 i=1
 try=1
 
@@ -116,12 +118,12 @@ function findAndExtract() {
 echo "=== starting $1 conversion"
 
 model=$(identify -format %[exif:Model] $1)
-if [[ "$model" == *Doxie* ]] 
-then
+#if [[ "$model" == *Doxie* ]] 
+#then
 
-	mkdir "cache" $cache "result/" "result/done/" $resultdir
+	mkdir "cache" $cache "result/" $resultDone $resultdir
 
-	echo "-#- scan clean "
+	echo "-#- scan clean " $model
 	convert \
 	 -crop +$border+$border -crop -$border-$border -border $borderx$border \
 	 -fuzz 25% -transparent white \
@@ -131,10 +133,10 @@ then
 	 -resize 'x'$maxWidth\
 	 $1 $scan
 
-	mv $1 "result/done/"
+	mv $1 $resultDone
 
 	# keep full draw
-	# convert $scan $resultdir$scanid.png
+	convert $scan $resultDone$scanid.png
 
 	echo "| | create bitmaps version"
 	convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
@@ -142,8 +144,8 @@ then
 	while true; do 
 		findAndExtract
 	done
-	mv $1 "result/done/"
+	mv $1 $resultDone
 	rm -rf $cache
 	curl -L "http://dev.free-idea.dcfvg.com/?f5=1"
 
-fi
+#fi
