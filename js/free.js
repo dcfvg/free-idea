@@ -24,7 +24,7 @@ $(function() {
             }}
           )
           .draggable('enable');
-
+          $("#message").addClass("hide");
           lastSelected = data.id;
       }else{
         console.log("no result");

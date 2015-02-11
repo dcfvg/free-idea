@@ -8,8 +8,26 @@ html,
   height: 100%;
   margin: 0;
   padding: 0;
-  font-size: 3em;
   overflow: hidden;
+}
+#message {
+  position: absolute;
+  width: 80%;
+  padding: 10%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 2em;
+  color: salmon;
+}
+#message ul {
+  list-style: decimal-leading-zero;
+}
+#message.hide {
+  opacity: 0;
+  -webkit-transition: opacity 0.5s ease-in-out;
+  -moz-transition: opacity 0.5s ease-in-out;
+  -ms-transition: opacity 0.5s ease-in-out;
+  -o-transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 #mainApp * {
   -webkit-touch-callout: none;
