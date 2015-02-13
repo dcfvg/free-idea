@@ -2,8 +2,8 @@
 # set -x
 
 now=$(date +"%y.%m.%d-%H.%M.%S")
-margin=500
-border=25
+border=5 				# cropblack borders (±25 for 150 dpi)
+minSurface=30 	# smallest piece in px2 (±100 for 150 dpi)
 
 ext=".mpc"
 
@@ -24,12 +24,8 @@ masktrim=$cache"masktrim.$ext"
 wandRes=$cache"wandres.$ext"
 result="$resultdir$scanid-$now.png"
 
-resultDone="result/done/"
-
 i=1
 try=1
-
-maxWidth=1000 #max scan size
 
 wandPosPrev=""
 wandPos=""
@@ -103,7 +99,7 @@ function findAndExtract() {
 	h=$(identify -format %[fx:h] $wandRes)
 	surface=$(( $w * $h ))
 	
-	if (( "$surface" < 100 ))
+	if (( "$surface" < $minSurface ))
 		then
 			echo " X  cancel, result surface is too small ($w x $h px : $surface px2 )"
 		else
@@ -121,7 +117,7 @@ model=$(identify -format %[exif:Model] $1)
 #if [[ "$model" == *Doxie* ]] 
 #then
 
-	mkdir "cache" $cache "result/" $resultDone $resultdir
+	mkdir "cache" $cache $resultdir
 
 	echo "-#- scan clean " $model
 	convert \
@@ -130,10 +126,9 @@ model=$(identify -format %[exif:Model] $1)
 	 -modulate 100,130,100 \
 	 -background white -alpha remove \
 	 +repage \
-	 -resize 'x'$maxWidth\
 	 $1 $scan
 
-	mv $1 $resultDone
+	#mv $1 $resultDone
 
 	# keep full draw
 	convert $scan $resultDone$scanid.png
@@ -146,6 +141,5 @@ model=$(identify -format %[exif:Model] $1)
 	done
 	mv $1 $resultDone
 	rm -rf $cache
-	curl -L "http://dev.free-idea.dcfvg.com/?f5=1"
 
 #fi
