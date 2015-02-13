@@ -13,6 +13,7 @@ scanid=${fscan%.*}
 
 cache="cache/"$scanid"/"
 resultdir="../../sources/separate-result/"$scanid"/"
+resultdir=${2:-$resultdir}
 
 scan=$cache"scan.$ext"
 bw2bit=$cache"bw.bmp"
@@ -126,6 +127,7 @@ model=$(identify -format %[exif:Model] $1)
 	 -modulate 100,130,100 \
 	 -background white -alpha remove \
 	 +repage \
+	 -fill white -draw 'point 0,0' \
 	 $1 $scan
 
 	#mv $1 $resultDone
@@ -139,7 +141,6 @@ model=$(identify -format %[exif:Model] $1)
 	while true; do 
 		findAndExtract
 	done
-	mv $1 $resultDone
 	rm -rf $cache
 
 #fi

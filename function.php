@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['clusterSize'] = 2;
+$GLOBALS['clusterSize'] = 1;
 $GLOBALS['maxTry'] = 1000;
 $GLOBALS['cache'] = "content/cache/";
 
@@ -52,7 +52,9 @@ function findNearestPart($s){
 		else      $s[1] = bzero(max(0,$s[1]-$step));
 		
 		$exclude = array();
-		//$exclude = array_unique(array_merge($_SESSION["blacklist"],$_SESSION["history"]));
+		//$exclude = array_unique(array_merge($_SESSION["blacklist"],$_SESSION["history"])); # double detection
+		$exclude = $_SESSION["history"]; # double detection
+
 		$parts = array_diff(glob($GLOBALS['cache'].$s[0]."x".$s[1]."/*.png"), $exclude);
 		
 		$t++;

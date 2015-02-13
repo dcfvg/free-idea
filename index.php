@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="css/screen.css">
   </head>
   <body id="mainApp">
-  	<div id="message">
+  	<div id="message" class="presmod">
       <h1>freeidea</h1>
       1 — <strong>Maintenir</strong> la barre d'espace <br>
       2 — Délimiter une <strong>zone</strong> par glisser déplacer <br>

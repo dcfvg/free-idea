@@ -9,6 +9,9 @@ $(function() {
           $(el).css({position:'absolute', left: tLeft, top: tTop});
     });
   }
+  function randomRange(min,max){
+    return randomNumber = Math.floor(Math.random()*(max-min+1)+min);
+  }
   function get_file(query){
     var posting = $.post(ajax_url, { query: query } );
     posting.done(function( data ) {
@@ -35,6 +38,35 @@ $(function() {
   function removeLastPart(){
     $paper.find('img#'+lastSelected).remove();
   }
+  function mix(){
+    var total = $paper.find("img").length;
+    var offSet = Math.round(total/2) + randomRange(0,total);
+    if(offSet == total) offSet = 1;
+
+    $paper.find("img").each(function(index) {
+
+      var $this = $(this)
+
+      var $target = $paper.find("img:nth-child("+ (((index+ offSet) % total)+1) +")");
+      var top = $target.css('top');
+      var left = $target.css('left');
+      var pos = $target.position();
+
+      setTimeout(function(){
+        // console.log(
+        //   index + "[top:" + $this.css('top')+ " left:" + $this.css('left')+"]" +
+        //   "->" + (index+ Math.round(total/2)) % total 
+        //   +"[top:" + pos.top + " left:" + pos.left +"]" 
+        // );
+
+        $this.animate({
+          left: pos.left,
+          top: pos.top
+        }, Math.max(150, animationDuration/total));
+
+      }, index*Math.max(150/1.5, animationDuration/1.5/total));
+    })
+  }
   function queryFromDom(selector){
 
 
@@ -49,6 +81,13 @@ $(function() {
   }
   function addToBlackList(file){
     var posting = $.post(ajax_url, { blacklist: file } );
+    posting.done(function( data ) {
+      data = JSON.parse(data);
+      console.log(data);
+    });
+  }
+  function emptyHistory(){
+    var posting = $.post(ajax_url, { reset: true } );
     posting.done(function( data ) {
       data = JSON.parse(data);
       console.log(data);
@@ -74,6 +113,10 @@ $(function() {
   function init(){ 
 		//init_camera();
 	}
+  function reset(){
+    $paper.empty();
+    emptyHistory();
+  }
 
   // vars
 
@@ -86,6 +129,7 @@ $(function() {
   draw = false,
   draw_dot = false,
   draw_around = false,
+  animationDuration = 2500,
   $paper = $("#drawZone"),
   $video = $( "#my_camera" ), vid_h=1080,vid_w=1920,
   lastSelected;
@@ -112,7 +156,7 @@ $(function() {
     if(draw_dot && draw && moves > moves_max){
       startMousePos.x = currentMousePos.x;
       startMousePos.y = currentMousePos.y;
-      get_file("100x100");
+      get_file("30x30");
       moves = 0;
     }
     if(draw_around && draw && moves > moves_max){
@@ -147,10 +191,13 @@ $(function() {
     // d -> draw with dot 
     if ( event.which == 100 ) draw_dot = !draw_dot;
     // e -> eraser
-    if ( event.which == 101 ) $paper.empty();
+    if ( event.which == 101 ) reset();
     // q -> add element around the same point
     if ( event.which == 113 ) draw_around = !draw_around;
     
+    // m -> mix !
+    if ( event.which == 109 ) mix();
+
     // w -> start webcam
     if ( event.which == 119 ) init_camera();    
     

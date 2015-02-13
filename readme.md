@@ -25,6 +25,8 @@ Free Idea
 
 `e` — erase all
 
+`m` — mix
+
 `w` — start webcam
 
 ## test version 

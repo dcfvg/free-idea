@@ -42,3 +42,5 @@ cache-*
 *.DS_Store
 
 *.mpc
+
+*.png

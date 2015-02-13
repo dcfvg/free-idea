@@ -34,6 +34,10 @@ if(isset($_POST["blacklist"])){
   file_put_contents($blacklist_cache, serialize($_SESSION["blacklist"]));
   $result["blacklist"] = $_SESSION["blacklist"];
 }
+if (isset($_POST["reset"])) {
+  unset($_SESSION["history"]);
+  $result["history"] = $_SESSION["history"];
+}
 
 echo json_encode($result);
 ?>
