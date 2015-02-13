@@ -6,15 +6,18 @@ do
 	
 	fscan=$(basename $step)
 	scanid=${fscan%.*}
-	resultdir="result/"$scanid"/"
-	
+	resultdir="../../sources/separate-result/"$scanid"/"
+
 	if [ ! -d "$resultdir" ]; then
 		
 		if [[ -a $step ]]; then
 			echo $step
-			bash separate.sh $step
+			bash separate.sh "$step"
+
+			curl -L "http://dev.free-idea.dcfvg.com/?f5=1"
+
 		fi
-	else
-		echo "skiping $step : result dir already exists"
+	#else
+		#echo "skiping $step : result dir already exists"
 	fi
 done
