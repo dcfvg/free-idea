@@ -2,7 +2,7 @@
 # set -x
 
 now=$(date +"%y.%m.%d-%H.%M.%S")
-border=5 				# cropblack borders (±25 for 150 dpi)
+border=1 				# cropblack borders (±25 for 150 dpi)
 minSurface=30 	# smallest piece in px2 (±100 for 150 dpi)
 
 ext=".mpc"
@@ -128,6 +128,7 @@ model=$(identify -format %[exif:Model] $1)
 	 -background white -alpha remove \
 	 +repage \
 	 -fill white -draw 'point 0,0' \
+	 -rotate -90 \
 	 $1 $scan
 
 	#mv $1 $resultDone
