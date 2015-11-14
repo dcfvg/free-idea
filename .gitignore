@@ -1,5 +1,15 @@
 *assets*
 
+/content/
+/sources/
+/tools/separate-2/scan
+/tools/separate-2/result
+/tools/separate-2/cache
+/tools/separate-2/result-test/
+
+cache-*
+
+*.cache
 *.pdf
 *.indd
 *.ai
@@ -7,40 +17,60 @@
 *.jpg
 *.jpeg
 *.psd
-
 *.mp4
 *.m4a
 *.mov
-
 *.mp3
 *.wav
-
-
 *.zip
 *.dmg
+*.tmproj
+*.mpc
+*.png
 
 *.crdownload
 *btsync*
 
-*.tmproj
-/content/
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
 
-/sources/
+# Folder config file
+Desktop.ini
 
-/tools/separate-2/scan
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
 
-/tools/separate-2/result
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
 
-/tools/separate-2/cache
+# Windows shortcuts
+*.lnk
 
-/tools/separate-2/result-test/
+# =========================
+# Operating System Files
+# =========================
 
-cache-*
+# OSX
+# =========================
 
-*.cache
+.DS_Store
+.AppleDouble
+.LSOverride
 
-*.DS_Store
+# Thumbnails
+._*
 
-*.mpc
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
 
-*.png
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
