@@ -10,7 +10,6 @@ i=1
 printf "\n\tcount\tsize in px\tfile count\n"
 printf "|-------------------------------------------------|\n"
 
-
 for dir in `find $cache -mindepth 1 -type d`
 do
 
