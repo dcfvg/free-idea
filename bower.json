@@ -1,0 +1,17 @@
+{
+  "name": "free-idea",
+  "version": "0.0.0",
+  "homepage": "https://github.com/dcfvg/free-idea",
+  "authors": [
+    "dcfvg <qwsx@dcfvg.com>"
+  ],
+  "description": "brand new ideas from old drawings.",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -5,6 +5,9 @@
 /tools/separate-2/cache
 /tools/separate-2/result-test/
 
+bower_components/
+node_modules/
+
 cache-*
 
 *.cache
