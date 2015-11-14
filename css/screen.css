@@ -135,3 +135,6 @@ html,
   height: 100%;
   z-index: 0;
 }
+#my_camera.isight {
+  -webkit-transform: rotate(180deg);
+}
