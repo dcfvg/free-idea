@@ -19,9 +19,7 @@ gulp.task('serve', function() {
     });
   });
 
-  gulp.watch('**/*.php').on('change', function () {
-    browserSync.reload();
-  });
+  // gulp.watch('**/*.php').on('change', function () {browserSync.reload();});
   gulp.watch('./app/assets/less/*.less', ['less']);
   gulp.watch('./app/assets/js/*.js').on('change', function () {
     browserSync.reload();
