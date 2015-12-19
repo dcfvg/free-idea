@@ -6,6 +6,7 @@ body, html, #drawZone {
 
   margin:0;
   padding:0;
+  overflow: hidden;
 }
 #drawZone {  overflow:hidden;}
 #message {
@@ -101,7 +102,9 @@ body, html, #drawZone {
   }
   td, th{
     .rounded(3px);
-    padding:9px;
+    // padding:4px;
+    min-width: 20px;
+    min-height: 20px;
     text-align:center;
     vertical-align:middle;
     &:hover{
@@ -114,6 +117,8 @@ body, html, #drawZone {
     position:absolute;
     border:#FF0000 1px solid;
     background:white;
+    background-repeat: no-repeat;
+    background-size: contain;
 
     top:-100px;
     left:-100px;

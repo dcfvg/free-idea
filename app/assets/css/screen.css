@@ -8,6 +8,7 @@ html,
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 #drawZone {
   overflow: hidden;
@@ -93,7 +94,8 @@ html,
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  padding: 9px;
+  min-width: 20px;
+  min-height: 20px;
   text-align: center;
   vertical-align: middle;
 }
@@ -111,6 +113,8 @@ html,
   position: absolute;
   border: #FF0000 1px solid;
   background: white;
+  background-repeat: no-repeat;
+  background-size: contain;
   top: -100px;
   left: -100px;
   width: 0;
