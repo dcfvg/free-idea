@@ -9,6 +9,8 @@ bower_components/
 node_modules/
 app/content/
 
+config.json
+
 cache-*
 
 *.cache
