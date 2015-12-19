@@ -2,8 +2,8 @@
 # set -x
 
 now=$(date +"%y.%m.%d-%H.%M.%S")
-border=1 				# cropblack borders (±25 for 150 dpi)
-minSurface=30 	# smallest piece in px2 (±100 for 150 dpi)
+border=0 				# cropblack borders (±25 for 150 dpi)
+minSurface=100 	# smallest piece in px2 (±100 for 150 dpi)
 
 ext=".mpc"
 
@@ -11,9 +11,14 @@ ext=".mpc"
 fscan=$(basename $1)
 scanid=${fscan%.*}
 
+originPath=$(dirname $1)
+collection=$(basename $originPath)
+
 cache="cache/"$scanid"/"
-resultdir="../../sources/separate-result/"$scanid"/"
+resultdir="/Users/benoit/Scripts/custom/free-idea/sources/"$collection"-result/"$scanid"/"
 resultdir=${2:-$resultdir}
+
+resultDone=$resultdir/raw-
 
 scan=$cache"scan.$ext"
 bw2bit=$cache"bw.bmp"
@@ -32,38 +37,38 @@ wandPosPrev=""
 wandPos=""
 
 function findAndExtract() {
-	
+
 	echo "    "
 	echo "    part #$i research $try"
-	
+
 	cropsize=$(convert $bw2bit -fuzz 25% -trim -format '%wx%h%O' info:)
-	
+
 	echo "[ ] crop research zone ($cropsize)"
 	convert -crop $cropsize +repage $bw2bit $bw2bit
 	convert -crop $cropsize +repage $scan $scan
 
 	#echo "[|] save log image "
 	#convert -format jpg $bw2bit $resultdir"/log-$id.jpg"
-	
+
 	((try++))
 
 	id=`printf %04d $i`
 	result="$resultdir$scanid-$id.png"
-	
+
 	echo " ?  looking for a black pixel"
 	position=$(convert "$bw2bit" txt:- | LC_ALL=C fgrep  "black" | head -n 1)
 	position="${position%%:*}"
 	IFS=', ' read -a pos <<< "$position"
-	wandPos=$((pos[0]))","$((pos[1])) # go down 
+	wandPos=$((pos[0]))","$((pos[1])) # go down
 
 	if [ "$wandPos" == "0,0" ]
-		then 
+		then
 		echo "  X quit because of bad magicwand position ($wandPos)"
 		exit 0
 	fi
 
 	if [ "$wandPos" == "$wandPosPrev" ]
-		then 
+		then
 			((wandAlert++))
 		else
 			wandAlert=0
@@ -92,54 +97,58 @@ function findAndExtract() {
 	composite -compose copy_opacity $mask $scan $wandRes 	# extract
 	composite -compose copy_opacity $imask $bw2bit $bw2bit  # delete
 	convert -background white -alpha remove $bw2bit $bw2bit #
-	
+
 	echo "[ ] trim result"
 	convert -fuzz 30% -trim -background white -alpha remove $wandRes $wandRes
 
 	w=$(identify -format %[fx:w] $wandRes)
 	h=$(identify -format %[fx:h] $wandRes)
 	surface=$(( $w * $h ))
-	
+
 	if (( "$surface" < $minSurface ))
 		then
 			echo " X  cancel, result surface is too small ($w x $h px : $surface px2 )"
 		else
 			echo " ~  remove background and save ($w x $h)"
 			convert -fuzz 30% -transparent white -resize 99% $wandRes $result
+			try=1
 			((i++))
 	fi
 
 	wandPosPrev=$wandPos
 }
 
-echo "=== starting $1 conversion"
+echo "=== starting $1 conversion in $collection"
 
 model=$(identify -format %[exif:Model] $1)
-#if [[ "$model" == *Doxie* ]] 
+#if [[ "$model" == *Doxie* ]]
 #then
 
-	mkdir "cache" $cache $resultdir
+	mkdir -p "cache" $cache $resultdir
 
 	echo "-#- scan clean " $model
 	convert \
+	 -contrast -normalize \
 	 -crop +$border+$border -crop -$border-$border -border $borderx$border \
-	 -fuzz 25% -transparent white \
-	 -modulate 100,130,100 \
+	 -fuzz 15% -transparent white \
 	 -background white -alpha remove \
 	 +repage \
 	 -fill white -draw 'point 0,0' \
-	 -rotate -90 \
 	 $1 $scan
 
-	#mv $1 $resultDone
+	 #
+	 # -modulate 100,130,100 \
+	 # -rotate -90 \
+
+	# mv $1 $resultDone
 
 	# keep full draw
-	convert $scan $resultDone$scanid.png
+	convert $scan $resultDone$scanid.jpg
 
 	echo "| | create bitmaps version"
-	convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit  
+	convert -auto-gamma -colors 2 +dither -type bilevel $scan $bw2bit
 
-	while true; do 
+	while true; do
 		findAndExtract
 	done
 	rm -rf $cache
