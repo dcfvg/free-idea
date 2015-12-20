@@ -6804,13 +6804,19 @@ button.close {
   user-select: none;
   cursor: crosshair;
 }
-#distrib #graph .preview,
-#distrib #graph .previewZone {
+#distrib h2 {
+  text-align: center;
+}
+#distrib #graph svg {
+  shape-rendering: crispEdges;
+}
+#distrib #graph svg .preview,
+#distrib #graph svg .previewZone {
   pointer-events: none;
 }
-#distrib #graph .previewZone {
+#distrib #graph svg .previewZone {
   stroke-width: 1px;
   stroke: royalblue;
   fill: white;
-  stroke-dasharray: 10,5;
+  fill: rgba(255, 255, 255, 0.95);
 }

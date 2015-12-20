@@ -1,6 +1,5 @@
 @import '../../../bower_components/bootstrap/less/bootstrap.less';
 
-
 .no-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -10,6 +9,14 @@
   user-select: none;
   cursor:crosshair;
 }
+.transparence(@grey : #e9e9e9) {
+  background-image: linear-gradient(45deg, @grey 25%, transparent 25%, transparent 75%, @grey 75%, @grey),
+  linear-gradient(45deg, @grey 25%, transparent 25%, transparent 75%, @grey 75%, @grey);
+  background-size:20px 20px;
+  background-position:0 0, 30px 30px;
+  background-repeat:repeat;
+}
+
 #mainApp {
   body, html, #drawZone {
     width:100%;
@@ -19,27 +26,10 @@
     padding:0;
     overflow: hidden;
   }
-
-
-  * {
-    .no-select;
-  }
+  * {.no-select;}
 
   #select {
-    // .box-shadow(8px, 8px, 20px, #aaa);
-    // .rounded(20px);
-
-    // background-image:url('../images/grid.gif');
-    // background-color: yellow;
-    @grey : #e9e9e9;
-
-    background-image: linear-gradient(45deg, @grey 25%, transparent 25%, transparent 75%, @grey 75%, @grey),
-    linear-gradient(45deg, @grey 25%, transparent 25%, transparent 75%, @grey 75%, @grey);
-
-    background-size:20px 20px;
-    background-position:0 0, 30px 30px;
-
-    background-repeat:repeat;
+    .transparence();
     z-index: -1;
   }
 
@@ -87,18 +77,28 @@
   *{
     .no-select;
   }
+  h2 {
+    text-align: center;
+  }
+  #graph svg {
 
-  #graph {
-      // background-color: gold;
+    shape-rendering: crispEdges;
+
+    .cluster {
+      // stroke-width:1px;
+      // stroke:royalblue;
+      // opacity: 0.5;
+    }
+
+    // background-color: lighten(royalblue, 40%);
+
     .preview, .previewZone { pointer-events: none;}
-
     .previewZone {
       stroke-width:1px;
       stroke:royalblue;
       fill:white;
-      // fill:rgba(255, 255, 255, 0.9);
-      stroke-dasharray:10,5;
-
+      fill:rgba(255, 255, 255, 0.95);
+      // stroke-dasharray:6,3;
     }
   }
 }

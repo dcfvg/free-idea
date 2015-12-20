@@ -4,7 +4,7 @@ $(function() {
 
   conf = {
     url:"http://localhost:3000/",
-    publicCache:"/content/cache-devcolor/",
+    publicCache:"/content/cache-dev/",
     drawParts:"/sources/dessins-attente-result/",
     step:10,
     dotSizeMin:20,
@@ -25,8 +25,8 @@ $(function() {
     var svg = d3.select('#graph').append('svg:svg').attr('width', w).attr('height', h);
 
 
-    var scale = w/maxWidth;
-    var color = d3.scale.log().domain([1, partsMax/20]).range(['royalblue','gold']);
+    var scale = w/(maxWidth-1);
+    var color = d3.scale.log().domain([1, partsMax/20]).range(['royalblue','tomato']);
     var cluster = svg.selectAll('.cluster').data(collection).enter()
 
       cluster
@@ -58,10 +58,10 @@ $(function() {
       });
 
       var previewPosAttr = {
-       x: 0,
-       y: 0,
-       width: function(){return xScale(d) },
-       height: function(){return yScale(d) }
+       x: conf.step * scale,
+       y: conf.step * scale,
+       width:  function(){ return xScale(d) },
+       height: function(){ return yScale(d) }
       };
 
       preview
@@ -73,8 +73,8 @@ $(function() {
       previewZone.attr(previewPosAttr);
     }
 
-    function clustFill(d) {return color(d.c)}
-    function clustScale(d) { return (conf.step * scale)}
+    function clustFill(d)  { return color(d.c) }
+    function clustScale(d) { return (conf.step * scale) }
     function xScale (d) { return d.w * scale }
     function yScale (d) { return d.h * scale }
   });
