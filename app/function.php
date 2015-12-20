@@ -6,20 +6,20 @@ $GLOBALS['cache'] = "content/cache/";
 
 function sortBySize(){
 	$p=0;
-	
+
 	ini_set('memory_limit', '-1');
 	set_time_limit(6000);
-	
+
 	$cache = $GLOBALS['cache'];
 	if(!file_exists($cache)) mkdir($cache);
-	
-	$files = glob("sources/separate-result/IMG_*/*-*.png");
+
+	$files = glob("/Users/benoit/Scripts/custom/free-idea/sources/dessins-attente-result/wait-*/wait-*-*.png");
 	foreach ($files as $id => $file) {
 
 		$s = aproxSize(getimagesize($file));
 		$d = $cache.'/'.$s[0]."x".$s[1];
 		$newFile = $d.'/'.basename($file);
-		
+
 		if(!file_exists($d)) mkdir($d);
 		if(!file_exists($newFile)){
 			copy($file,$newFile);
@@ -42,36 +42,36 @@ function findNearestPart($s){
 	$s = aproxSize($s);
 	$step = pow(10,$GLOBALS['clusterSize']);
 	$flip = true;
-	
+
 	while (!isset($parts[0]) and $t < $GLOBALS['maxTry']) {
-		
+
 		$res["querys"][] = $s[0]."x".$s[1];
 		$flip = !$flip;
-		
+
 		if($flip) $s[0] = bzero(max(0,$s[0]-$step));
 		else      $s[1] = bzero(max(0,$s[1]-$step));
-		
+
 		$exclude = array();
 		//$exclude = array_unique(array_merge($_SESSION["blacklist"],$_SESSION["history"])); # double detection
 		$exclude = $_SESSION["history"]; # double detection
 
 		$parts = array_diff(glob($GLOBALS['cache'].$s[0]."x".$s[1]."/*.png"), $exclude);
-		
+
 		$t++;
 	}
 
 	if($t >= $GLOBALS['maxTry']){
-		if(empty($parts)){ 
+		if(empty($parts)){
 			$parts = glob($GLOBALS['cache'].$s[0]."x*/*.png");
 			$t++;
 			$res["querys"][] = "all-w";
 		};
-		if(empty($parts)){ 
+		if(empty($parts)){
 			$parts = glob($GLOBALS['cache']."*x".$s[1]."/*.png");
 			$t++;
 			$res["querys"][] = "all-h";
 		};
-		if(empty($parts)){ 
+		if(empty($parts)){
 			$parts = glob($GLOBALS['cache']."*x*/*.png");
 			$t++;
 			$res["querys"][] = "all-a";
@@ -79,16 +79,16 @@ function findNearestPart($s){
 	}
 
 	shuffle($parts);
-	
+
 	$res["result"] = $parts[0];
 	$res["trys"] = $t;
-	
+
 	return $res;
 }
 function array_not_unique($raw_array){
-	
-		// looking for duplicate element in array 
-		
+
+		// looking for duplicate element in array
+
 		$dupes = array();
 		natcasesort($raw_array);
 		reset ($raw_array);
@@ -108,7 +108,7 @@ function array_not_unique($raw_array){
 }
 function pxTocm($s){
  	$cons = 5.905628064;
- 
+
 	$s[0] = round($s[0]/$cons);
  	$s[1] = round($s[1]/$cons);
 
@@ -136,7 +136,7 @@ function listShapes($w, $h){
 
 	$s = bzero($w * $step)."x".bzero($h * $step);
 
-	$tmp = glob($cache.'/'.$s.'/IMG_*');
+	$tmp = glob($cache.'/'.$s.'/*.png');
 	//array_splice($tmp, $limit);
 
 	return $tmp;
