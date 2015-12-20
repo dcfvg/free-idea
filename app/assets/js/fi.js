@@ -1,41 +1,44 @@
 $(function() {
 
-  // functions
-
   // search in cluster array (grid) the nearest result
   function search(size){
 
-    var q = _.map(size, function(d){ return Math.ceil(d / 10) * 10;})
-    var result = _(grid).filter({'w':q[0], 'h':q[1]}).value()
+    var q = _.map(size, function(d){ return Math.ceil(d / 10) * 10;});
+    var result = _(grid).filter({'w':q[0], 'h':q[1]}).value();
 
-    if(result.length > 0){
-      searchTry=0;
+    if(result.length){
       appendResult(result[0]);
-
+      searchTry=0;
     }else if(searchTry < 25){
-      size[0] = size[0] - 10;
-      size[1] = size[1] + 10;
-
+      // try a new search
       searchTry++;
-      search(size);
-
+      search([size[0] - 10, size[1] + 10]);
     }else{
-      var result = _(grid).shuffle().first();
-      appendResult(result);
-
+      // get random part
+      appendResult(_(grid).shuffle().first());
     }
   }
 
+
+  function pickPart(cluster){
+
+    var pos = 0, id = 'p';
+
+    // while($("#" + id).length !== 0){
+      pos = randomRange(0,cluster.c - 1);
+      id  = "res"+cluster.w+'-'+cluster.h+'-'+pos;
+    // }
+
+    var src = conf.publicCache+cluster.w+'x'+cluster.h+'/'+pos+'.png';
+    return { src:src,id:id }
+  }
   // choose in results and add draw it
   function appendResult(cluster){
-    var pos = randomRange(0,cluster.c - 1);
-    cluster.history.push(pos);
 
-    var id  = "res"+cluster.w+'-'+cluster.h+'-'+pos;
-    var src = conf.publicCache+cluster.w+'x'+cluster.h+'/'+pos+'.png';
+    var p = pickPart(cluster);
 
     $paper
-      .append('<img class="draggable" id="'+id+'" src="'+src+'">')
+      .append('<img class="draggable" id="'+p.id+'" src="'+p.src+'">')
       .find('img:last-child()')
       .css({position:'absolute', left: startMousePos.x, top: startMousePos.y})
       .draggable({disabled: true, start: function(event, ui) {
@@ -45,7 +48,7 @@ $(function() {
       })
       .draggable('enable');
       $("#message").addClass("hide");
-      lastSelected = id;
+      lastSelected = p.id;
   }
 
   // create selection zone
