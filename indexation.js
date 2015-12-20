@@ -21,7 +21,7 @@ function moveFiles(){
       var path = __dirname+conf.publicCache+approxSize[0]+'x'+approxSize[1]+'/';
 
       mkdirp.sync(path);
-      var count = glob.sync(path+'/*.png').length + 1;
+      var count = glob.sync(path+'/*.png').length;
 
       fsync.copy(f, path+count+'.png');
 
@@ -34,26 +34,16 @@ function genJson(){
 
   glob(__dirname+conf.publicCache+'**/*.png', function (er, files) {
 
-    var files = _(files)
-      .map(function(file){
-        return file.replace(__dirname+conf.publicCache,'')
-      })
-      .groupBy(function(file){
-        return path.dirname(file)
-      })
+    var grid = _(files)
+      .map(function(file){ return file.replace(__dirname+conf.publicCache,'') })
+      .groupBy(function(file){ return path.dirname(file) })
       .map(function(group, key){
-
         var size = key.split('x');
-
-        return {
-          c: group.length,
-          w:parseInt(size[0]),
-          h:parseInt(size[1])
-        }
+        return { c: group.length, w:parseInt(size[0]), h:parseInt(size[1])}
       })
       .value()
 
-    var grid = nest(files,["w","h"]);
+    // var grid = nest(files,["w","h"]);
 
     fs.writeFile(__dirname+conf.publicCache+'data.json', JSON.stringify(grid) , function(err) {
         if(err) return console.log(err);
