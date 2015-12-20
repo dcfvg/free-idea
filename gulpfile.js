@@ -9,7 +9,9 @@ var gulp = require('gulp'),
 var jsFiles = [
   './bower_components/jquery/dist/jquery.js',
   './bower_components/jquery-ui/jquery-ui.js',
-  './bower_components/lodash/lodash.js'
+  './bower_components/lodash/lodash.js',
+  './bower_components/d3/d3.min.js',
+  './bower_components/colorbrewer/colorbrewer.js'
   ];
 
 gulp.task('serve', function() {

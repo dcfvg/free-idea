@@ -6,19 +6,27 @@ $(function() {
     var q = _.map(size, function(d){ return Math.ceil(d / 10) * 10;});
     var result = _(grid).filter({'w':q[0], 'h':q[1]}).value();
 
+    console.log(size)
+
     if(result.length){
       appendResult(result[0]);
       searchTry=0;
-    }else if(searchTry < 25){
+    }else if(searchTry < 100){
       // try a new search
       searchTry++;
-      search([size[0] - 10, size[1] + 10]);
+
+      var newSize = [size[0] - 10, size[1] + 10];
+
+      // if(newSize[0] < 0 || newSize[1] < 0  ){
+      //   newSize = [size[0] + (10*searchTry), size[1] - (10*searchTry)];
+      // }
+
+      search(newSize);
     }else{
       // get random part
       appendResult(_(grid).shuffle().first());
     }
   }
-
 
   function pickPart(cluster){
 
