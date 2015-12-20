@@ -8,7 +8,8 @@ var gulp = require('gulp'),
 
 var jsFiles = [
   './bower_components/jquery/dist/jquery.js',
-  './bower_components/jquery-ui/jquery-ui.js'
+  './bower_components/jquery-ui/jquery-ui.js',
+  './bower_components/lodash/lodash.js'
   ];
 
 gulp.task('serve', function() {
@@ -19,7 +20,7 @@ gulp.task('serve', function() {
     });
   });
 
-  // gulp.watch('**/*.php').on('change', function () {browserSync.reload();});
+  gulp.watch('app/**/*.html').on('change', function () {browserSync.reload();});
   gulp.watch('./app/assets/less/*.less', ['less']);
   gulp.watch('./app/assets/js/*.js').on('change', function () {
     browserSync.reload();
@@ -31,14 +32,13 @@ gulp.task('less', function() {
         .pipe(less())
         .pipe(gulp.dest('./app/assets/css'))
         .pipe(browserSync.stream());
-
 });
 
-gulp.task('build-js', function() {
+gulp.task('js', function() {
     return gulp.src(jsFiles,{base: 'bower_components/'})
     .pipe(concat('all.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('./app/assets/js/'));
 });
 
-gulp.task('default', [ 'build-js', 'less', 'serve']);
+gulp.task('default', [ 'js', 'less', 'serve']);
