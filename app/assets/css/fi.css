@@ -6733,6 +6733,11 @@ button.close {
   user-select: none;
   cursor: crosshair;
 }
+canvas {
+  background-color: red;
+  border: red 10px solid;
+  margin-top: 100%;
+}
 #mainApp body,
 #mainApp html,
 #mainApp #drawZone {

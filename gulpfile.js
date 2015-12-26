@@ -11,7 +11,8 @@ var jsFiles = [
   './bower_components/jquery-ui/jquery-ui.js',
   './bower_components/lodash/lodash.js',
   './bower_components/d3/d3.min.js',
-  './bower_components/colorbrewer/colorbrewer.js'
+  './bower_components/colorbrewer/colorbrewer.js',
+  './bower_components/html2canvas/build/html2canvas.js'
   ];
 
 gulp.task('serve', function() {

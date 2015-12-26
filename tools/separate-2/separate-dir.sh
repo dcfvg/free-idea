@@ -1,4 +1,4 @@
-localDB=/Users/benoit/Scripts/custom/free-idea/sources/dessins-attente
+localDB=/Users/benoit/Scripts/custom/free-idea/sources/metro
 rm -rf cache*
 
 for step in `find ${1:-$localDB} -iname "*.JP*G" -exec ls -l {} \; | awk '{ print $5,"",$9 }'|sort -n`

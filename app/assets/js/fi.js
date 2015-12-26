@@ -15,7 +15,7 @@ $(function() {
       // try a new search
       searchTry++;
 
-      var newSize = [size[0] - 10, size[1] + 10];
+      var newSize = [ Math.abs(size[0]) - 10, Math.abs(size[1] + 10)];
 
       // if(newSize[0] < 0 || newSize[1] < 0  ){
       //   newSize = [size[0] + (10*searchTry), size[1] - (10*searchTry)];
@@ -24,7 +24,7 @@ $(function() {
       search(newSize);
     }else{
       // get random part
-      appendResult(_(grid).shuffle().first());
+      // appendResult(_(grid).shuffle().first());
     }
   }
 
@@ -32,12 +32,11 @@ $(function() {
 
     var pos = 0, id = 'p';
 
-    // while($("#" + id).length !== 0){
-      pos = randomRange(0,cluster.c - 1);
-      id  = "res"+cluster.w+'-'+cluster.h+'-'+pos;
-    // }
+    pos = _.random(0,cluster.c - 1);
+    id  = "res"+cluster.w+'-'+cluster.h+'-'+pos;
 
     var src = conf.publicCache+cluster.w+'x'+cluster.h+'/'+pos+'.png';
+
     return { src:src,id:id }
   }
   // choose in results and add draw it
@@ -57,6 +56,34 @@ $(function() {
       .draggable('enable');
       $("#message").addClass("hide");
       lastSelected = p.id;
+  }
+
+  // fill with random elements
+  function randomDrawing(settings){
+
+    var s = _.defaults(settings,{
+          maxHeight:200,
+          maxWidth:200,
+          minHeight:10,
+          minWidth:10,
+          elements:100,
+          elementsPerLocation:2
+        })
+
+    for (var i = s.elements/s.elementsPerLocation; i >= 0; i--) {
+      console.log(i);
+
+
+      var resWidth = _.random(s.minWidth, s.maxWidth),
+          resHeight = _.random(s.minWidth, s.maxHeight);
+
+      startMousePos.x = _.random(0, $( window ).width()-resWidth )
+      startMousePos.y = _.random(0, $( window ).height()-resHeight )
+
+      for (var j = s.elementsPerLocation; j >= 0; j--) search([resWidth,resHeight])
+
+    };
+    console.log(s);
   }
 
   // create selection zone
@@ -85,7 +112,7 @@ $(function() {
       startMousePos.x = currentMousePos.x;
       startMousePos.y = currentMousePos.y;
 
-      dotSize = randomRange(conf.dotSizeMin,conf.dotSizeMax)
+      dotSize = _.random(conf.dotSizeMin,conf.dotSizeMax)
 
       search([dotSize,dotSize]);
       moves = 0;
@@ -129,11 +156,24 @@ $(function() {
     }
   }
 
+  function saveAsPng(){
+
+    html2canvas(document.body, {
+      onrendered: function(canvas) {
+        document.body.appendChild(canvas);
+      },
+      logging:true
+    });
+  }
+
   function onKeyPress ( e ){
-    //console.log(e.which);
+    console.log(e.which);
 
     // r -> rm last selected part
     if ( e.which == 114 ) removeLastPart();
+
+    // p -> export as image
+    if ( e.which == 112 ) saveAsPng();
 
     // d -> draw with dot
     if ( e.which == 100 ) draw_dot = !draw_dot;
@@ -141,11 +181,24 @@ $(function() {
     // e -> eraser
     if ( e.which == 101 ) reset();
 
+    // g -> generate random
+    if ( e.which == 103) randomDrawing({elements:10});
+    // h + j
+
+    if ( e.which == 104) randomDrawing({elements:1, minHeight:400, minWidth:400, maxHeight:2000, maxWidth:2000, elementsPerLocation:1});
+    if ( e.which == 106) randomDrawing({elements:100, minHeight:10, minWidth:10, maxHeight:500, maxWidth:20, elementsPerLocation:1});
+
     // q -> add element around the same point
     if ( e.which == 113 ) draw_around = !draw_around;
 
     // m -> mix !
     if ( e.which == 109 ) mix();
+
+    // b -> rotate left
+    if ( e.which == 98 ) $paper.find('img#'+lastSelected).rotate(-5);
+
+    // n -> rotate right
+    if ( e.which == 110 ) $paper.find('img#'+lastSelected).rotate(+5);
 
     // w -> start webcam
     if ( e.which == 119 ) init_camera();
@@ -166,7 +219,7 @@ $(function() {
   // exchange placement bettween drawing parts
   function mix(){
     var total = $paper.find("img").length;
-    var offSet = Math.round(total/2) + randomRange(0,total);
+    var offSet = Math.round(total/2) + _.random(0,total);
     if(offSet == total) offSet = 1;
 
     $paper.find("img").each(function(index) {
@@ -209,9 +262,7 @@ $(function() {
       }, onCameraFail);
   }
 
-  function reset(){
-    $paper.empty();
-  }
+  function reset(){ if(confirm("💥 ?")) $paper.empty();}
 
   function init(d){
     // init_camera();
@@ -248,7 +299,7 @@ $(function() {
   conf = {
     url:"http://localhost:3000/",
     publicCache:"/content/cache-dev/",
-    drawParts:"/sources/dessins-attente-result/",
+    drawParts:"/sources/metro-result/",
     step:10,
     dotSizeMin:20,
     dotSizeMax:20
@@ -258,7 +309,6 @@ $(function() {
   $.getJSON(conf.publicCache+'data.json', init);
 
   // utils
-  var randomRange = function(min,max){ return randomNumber = Math.floor(Math.random()*(max-min+1)+min);}
   var nest = function (seq, keys) {
     if (!keys.length)
         return seq;
@@ -268,4 +318,28 @@ $(function() {
         return nest(value, rest)
     });
   };
+
+  jQuery.fn.rotate = function(rotation) {
+
+    var currentRotate = $(this).attr('rotate') ? parseInt($(this).attr('rotate')) : 0;
+    var degrees = currentRotate + rotation;
+
+    console.log(degrees)
+
+    $(this).css({'-webkit-transform' : 'rotate('+ degrees +'deg)',
+                 '-moz-transform' : 'rotate('+ degrees +'deg)',
+                 '-ms-transform' : 'rotate('+ degrees +'deg)',
+                 'transform' : 'rotate('+ degrees +'deg)'});
+    $(this).attr('rotate', degrees)
+    return $(this);
+
+  };
+
+  window.addEventListener("beforeunload", function (e) {
+      var confirmationMessage = 'It looks like you have been editing something. '
+                              + 'If you leave before saving, your changes will be lost.';
+
+      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+  });
 });

@@ -5,7 +5,7 @@ $(function() {
   conf = {
     url:"http://localhost:3000/",
     publicCache:"/content/cache-dev/",
-    drawParts:"/sources/dessins-attente-result/",
+    drawParts:"/sources/metro-result/",
     step:10,
     dotSizeMin:20,
     dotSizeMax:20
