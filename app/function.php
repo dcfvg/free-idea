@@ -13,7 +13,7 @@ function sortBySize(){
 	$cache = $GLOBALS['cache'];
 	if(!file_exists($cache)) mkdir($cache);
 
-	$files = glob("/Users/benoit/Scripts/custom/free-idea/sources/dessins-attente-result/wait-*/wait-*-*.png");
+	$files = glob("/Users/benoit/Scripts/custom/free-idea/sources/metro-result/**/*.png");
 	foreach ($files as $id => $file) {
 
 		$s = aproxSize(getimagesize($file));
