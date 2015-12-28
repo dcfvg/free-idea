@@ -14,7 +14,13 @@ $(function() {
   d3.json(conf.publicCache+'data.json', function(error, data){
 
 
-    var collection = _(data).sortByAll(['h','w']).value();
+    var collection = _(data)
+      .sortByAll(['h','w']).filter(function(d){
+        return d.w < 100
+      }).value();
+
+    // group by h
+    // array reverse %2 === 0
 
     var partsCount = _.sum(collection, function(d){ return d.c });
     var partsMax = _.max(collection, function(d){ return d.c }).c;
@@ -23,6 +29,7 @@ $(function() {
 
     var clusterId = 0;
     var partId = 0;
+    var widthId = 0;
 
     function addNextPart(){
 
@@ -32,31 +39,22 @@ $(function() {
 
         clusterId++;
         partId = 0;
-        console.log(currentCluster)
+        // console.log(currentCluster)
 
       }else{
         partId ++;
+          $('html,body').scrollTop($( document ).height());
       }
 
       var src = conf.publicCache + currentCluster.w + 'x' + currentCluster.h + '/' + partId + '.png';
-      var img = $('<img src="'+ src +'">').on("load", function() {
-        setTimeout(addNextPart, 10)
+      var img = $('<img src="'+ src +'">')
 
-      }).on("error", function() {
-        $(this).remove()
-        setTimeout(addNextPart, 10)
-
-      })
 
       $("#graph").append(img)
+      if(clusterId < collection.length - 1)  setTimeout(addNextPart, 10)
 
     }
-
-
-    console.log(collection)
     addNextPart();
-
-    // setInterval(addNextPart, 50);
 
   });
 })
