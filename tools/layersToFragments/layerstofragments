@@ -1,0 +1,42 @@
+#!/bin/bash
+# set -x
+
+sources=$1
+raw=$1"/"
+assets=$1"/assets/"
+result=$assets"result/"
+archive=$raw"done/"
+
+resutltype="png"
+
+mkdir -p $raw $archive $result
+
+function layerToFiles {
+
+  detox -vr $1
+
+  for psd in `find $1 -iname "*.psd" -maxdepth 1 -type f`
+  do
+
+
+    dirname=$(dirname "$psd")
+    filename=$(basename "$psd")
+    extension="${filename##*.}"
+    filenameclean="${filename%.*}"
+
+    echo $psd " -> " $filenameclean.$resutltype
+
+    mkdir $result$filenameclean
+    convert $raw/$filenameclean.psd $result$filenameclean/$filenameclean-%d.$resutltype
+
+    # remove background
+    rm $result$filenameclean/*-0.$resutltype
+    rm $result$filenameclean/*-1.$resutltype
+
+    # archive raw PSD
+    mv $raw/$filenameclean.psd $archive/$filenameclean.psd
+
+  done
+}
+
+layerToFiles $raw
