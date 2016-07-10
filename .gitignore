@@ -1,5 +1,5 @@
-/content/
-/sources/
+/_sources/
+/_fragmeents/
 /tools/separate-2/scan
 /tools/separate-2/result
 /tools/separate-2/cache
@@ -8,6 +8,8 @@
 bower_components/
 node_modules/
 app/content/
+app/cache/
+app/sets.json
 
 config.json
 
