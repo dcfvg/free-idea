@@ -24,7 +24,7 @@ $(function() {
       search(newSize);
     }else{
       // get random part
-      // appendResult(_(grid).shuffle().first());
+      appendResult(_(grid).shuffle().first());
     }
   }
 
@@ -135,19 +135,16 @@ $(function() {
     if (draw) search(q);
     $("#select").remove();
   }
-
   function onMouseDown (e){
     startMousePos.x = e.pageX;
     startMousePos.y = e.pageY;
     if (draw) appendSelectionZone();
   }
 
-
   // keys
   function onKeyDown( e ){
     if ( e.which == 32 ) if(draw == false) draw = true; // toogle draw mode
   }
-
   function onKeyUp( e ){
     if ( e.which == 32 ) {
       draw = false; // toogle draw mode
@@ -155,7 +152,6 @@ $(function() {
       draw_around = false;
     }
   }
-
   function saveAsPng(){
 
     html2canvas(document.body, {
@@ -167,8 +163,6 @@ $(function() {
   }
 
   function onKeyPress ( e ){
-    console.log(e.which);
-
     // r -> rm last selected part
     if ( e.which == 114 ) removeLastPart();
 
@@ -184,7 +178,6 @@ $(function() {
     // g -> generate random
     if ( e.which == 103) randomDrawing({elements:10});
     // h + j
-
     if ( e.which == 104) randomDrawing({elements:1, minHeight:400, minWidth:400, maxHeight:2000, maxWidth:2000, elementsPerLocation:1});
     if ( e.which == 106) randomDrawing({elements:100, minHeight:10, minWidth:10, maxHeight:500, maxWidth:20, elementsPerLocation:1});
 
@@ -250,9 +243,7 @@ $(function() {
   }
 
   function init_camera(){
-      var onCameraFail = function (e) {
-          console.log('Camera did not work.', e);
-      };
+      var onCameraFail = function (e) { console.log('Camera did not work.', e) };
       var video = document.querySelector("#my_camera");
       navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
       window.URL = window.URL || window.webkitURL;
@@ -298,11 +289,11 @@ $(function() {
   grid,
   conf = {
     url:"http://localhost:3000/",
-    publicCache:"/content/cache-dev/",
-    drawParts:"/sources/metro-result/",
+    publicCache:"/content/cache-anamax/",
+    drawParts:"/sources/anamax-result/",
     step:10,
     dotSizeMin:20,
-    dotSizeMax:20
+    dotSizeMax:500
   };
 
   // Load data and init

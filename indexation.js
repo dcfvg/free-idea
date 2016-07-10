@@ -32,6 +32,8 @@ function moveFiles(){
 }
 function genJson(){
 
+  mkdirp.sync(__dirname+conf.publicCache);
+
   glob(__dirname+conf.publicCache+'**/*.png', function (er, files) {
 
     var grid = _(files)
