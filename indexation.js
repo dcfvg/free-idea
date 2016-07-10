@@ -1,6 +1,6 @@
 var glob = require('glob');
 var _ = require('lodash');
-var conf = require('./config.json')
+var conf = require('./config.json');
 var fs = require('fs');
 var path = require('path');
 var fs = require('fs');
@@ -8,36 +8,52 @@ var sizeOf = require('image-size');
 var mkdirp = require('mkdirp');
 var fs = require('fs');
 var fsync = require('fs-sync');
+var argv = require('yargs').argv;
+var conf = require('./config.json');
 
-moveFiles();
 
-function moveFiles(){
-  glob(__dirname+conf.drawParts+'**/*.png', function (er, files) {
+const path_string = __dirname+'/'+argv['_'][0];
+
+fs.stat(path_string, function(err,res){
+  if(res.isDirectory(path_string)) moveFiles(path_string)
+})
+
+function moveFiles(path_string){
+  console.log('moving files …');
+  const cache = conf.publicCache+path.basename(path_string)+'/';
+  var fileCount = 0;
+
+  glob(path_string+'**/*.png', function (er, files) {
 
     _(files).forEach(function(f,i){
       var size = sizeOf(f);
       var approxSize = _.map(size, function(d){ return Math.ceil(d / 10) * 10;})
 
-      var path = __dirname+conf.publicCache+approxSize[0]+'x'+approxSize[1]+'/';
+      var sizePath = cache+approxSize[0]+'x'+approxSize[1]+'/';
 
-      mkdirp.sync(path);
-      var count = glob.sync(path+'/*.png').length;
+      mkdirp.sync(sizePath);
+      var count = glob.sync(sizePath+'/*.png').length;
 
-      fsync.copy(f, path+count+'.png');
+      fileCount += count;
+
+      fsync.copy(f, sizePath+count+'.png');
 
     }).value()
 
-    genJson();
+    console.log('\t'+fileCount+' moved !');
+    writeIndex(cache);
   })
 }
-function genJson(){
 
-  mkdirp.sync(__dirname+conf.publicCache);
+function writeIndex(cache){
 
-  glob(__dirname+conf.publicCache+'**/*.png', function (er, files) {
+  mkdirp.sync(conf.publicCache);
+  console.log('indexing …');
+
+  glob(cache+'**/*.png', function (er, files) {
 
     var grid = _(files)
-      .map(function(file){ return file.replace(__dirname+conf.publicCache,'') })
+      .map(function(file){ return file.replace(conf.publicCache,'') })
       .groupBy(function(file){ return path.dirname(file) })
       .map(function(group, key){
         var size = key.split('x');
@@ -45,23 +61,9 @@ function genJson(){
       })
       .value()
 
-    // var grid = nest(files,["w","h"]);
-
-    fs.writeFile(__dirname+conf.publicCache+'data.json', JSON.stringify(grid) , function(err) {
+    fs.writeFile(cache+'index.json', JSON.stringify(grid) , function(err) {
         if(err) return console.log(err);
-        console.log("The file was saved!");
+        console.log('\t done indexing '+grid.length+' clusters');
     });
   })
 }
-
-
-var nest = function (seq, keys) {
-    if (!keys.length)
-        return seq;
-    var first = keys[0];
-    var rest = keys.slice(1);
-    return _.mapValues(_.groupBy(seq, first), function (value) {
-        return nest(value, rest)
-    });
-};
-
