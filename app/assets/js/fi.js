@@ -16,11 +16,6 @@ $(function() {
       searchTry++;
 
       var newSize = [ Math.abs(size[0]) - 10, Math.abs(size[1] + 10)];
-
-      // if(newSize[0] < 0 || newSize[1] < 0  ){
-      //   newSize = [size[0] + (10*searchTry), size[1] - (10*searchTry)];
-      // }
-
       search(newSize);
     }else{
       // get random part

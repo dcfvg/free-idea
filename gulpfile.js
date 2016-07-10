@@ -1,5 +1,4 @@
 var gulp = require('gulp'),
-    connect = require('gulp-connect-php'),
     browserSync = require('browser-sync'),
     less = require('gulp-less'),
     concat = require('gulp-concat'),
@@ -16,12 +15,8 @@ var jsFiles = [
   ];
 
 gulp.task('serve', function() {
-  connect.server({base: "./app"}, function (){
-    browserSync({
-      baseDir: "./app",
-      proxy: '127.0.0.1:8000'
-    });
-  });
+
+  browserSync.init({ server: "./app/" });
 
   gulp.watch('app/**/*.html').on('change', function () {browserSync.reload();});
   gulp.watch('./app/assets/less/*.less', ['less']);
