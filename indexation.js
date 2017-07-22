@@ -19,11 +19,13 @@ fs.stat(path_string, function(err,res){
 })
 
 function moveFiles(path_string){
-  console.log('moving files …');
+  console.log('starting …');
   const cache = conf.publicCache+path.basename(path_string)+'/';
   var fileCount = 0;
 
   glob(path_string+'**/*.png', function (er, files) {
+
+    console.log(files.length,'files to sort');
 
     _(files).forEach(function(f,i){
       var size = sizeOf(f);
@@ -37,7 +39,6 @@ function moveFiles(path_string){
       fileCount += count;
 
       fsync.copy(f, sizePath+count+'.png');
-
     }).value()
 
     console.log('\t'+fileCount+' moved !');
@@ -56,7 +57,7 @@ function writeIndex(cache){
       .map(function(file){ return file.replace(conf.publicCache,'') })
       .groupBy(function(file){ return path.dirname(file) })
       .map(function(group, key){
-        var size = key.split('x');
+        var size = path.basename(key).split('x');
         return { c: group.length, w:parseInt(size[0]), h:parseInt(size[1])}
       })
       .value()
