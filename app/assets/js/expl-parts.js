@@ -4,18 +4,18 @@ $(function() {
 
   conf = {
     url:"http://localhost:3000/",
-    publicCache:"/content/cache-dev/",
-    drawParts:"/sources/metro-result/",
+    publicCache:"/cache/metro/",
     step:10,
     dotSizeMin:20,
     dotSizeMax:20
   };
 
-  d3.json(conf.publicCache+'data.json', function(error, data){
+  d3.json(conf.publicCache+'index.json', function(error, data){
 
 
     var collection = _(data)
       .sortByAll(['h','w']).filter(function(d){
+        // return true
         return d.w < 100
       }).value();
 
@@ -36,19 +36,18 @@ $(function() {
       var currentCluster  = collection[clusterId];
 
       if(currentCluster.c - 2 < partId ){
-
         clusterId++;
         partId = 0;
-        // console.log(currentCluster)
-
       }else{
-        partId ++;
-          $('html,body').scrollTop($( document ).height());
+        partId++;
+        $('html,body').scrollTop($( document ).height());
       }
 
-      var src = conf.publicCache + currentCluster.w + 'x' + currentCluster.h + '/' + partId + '.png';
-      var img = $('<img src="'+ src +'">')
+      var toDisplay = partId;
+      if (clusterId % 2 === 0 )toDisplay = (currentCluster.c - 1) - partId;
 
+      var src = conf.publicCache + currentCluster.w + 'x' + currentCluster.h + '/' + toDisplay + '.png';
+      var img = $('<img src="'+ src +'">')
 
       $("#graph").append(img)
       if(clusterId < collection.length - 1)  setTimeout(addNextPart, 10)

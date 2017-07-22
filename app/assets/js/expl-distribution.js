@@ -1,17 +1,16 @@
 $(function() {
 
-  console.log('ok');
+  console.log('ok ok');
 
   conf = {
     url:"http://localhost:3000/",
-    publicCache:"/content/cache-dev/",
-    drawParts:"/sources/metro-result/",
+    publicCache:"/cache/metro/",
     step:10,
     dotSizeMin:20,
     dotSizeMax:20
   };
 
-  d3.json(conf.publicCache+'data.json', function(error, collection){
+  d3.json(conf.publicCache+'index.json', function(error, collection){
 
 
     var partsCount = _.sum(collection, function(d){ return d.c });

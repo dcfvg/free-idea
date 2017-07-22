@@ -6,15 +6,12 @@ $(function() {
     var q = _.map(size, function(d){ return Math.ceil(d / 10) * 10;});
     var result = _(grid).filter({'w':q[0], 'h':q[1]}).value();
 
-    console.log(size)
-
     if(result.length){
       appendResult(result[0]);
       searchTry=0;
     }else if(searchTry < 100){
       // try a new search
       searchTry++;
-
       var newSize = [ Math.abs(size[0]) - 10, Math.abs(size[1] + 10)];
       search(newSize);
     }else{
@@ -26,10 +23,8 @@ $(function() {
   function pickPart(cluster){
 
     var pos = 0, id = 'p';
-
     pos = _.random(0,cluster.c - 1);
     id  = "res"+cluster.w+'-'+cluster.h+'-'+pos;
-
     var src = conf.publicCache+cluster.w+'x'+cluster.h+'/'+pos+'.png';
 
     return { src:src,id:id }
@@ -252,6 +247,7 @@ $(function() {
 
   function init(d){
     // init_camera();
+
     // create history object for each clusters
     grid = _(d).forEach(function(d){ d.history = [] }).value();
 
@@ -284,15 +280,14 @@ $(function() {
   grid,
   conf = {
     url:"http://localhost:3000/",
-    publicCache:"/content/cache-anamax/",
-    drawParts:"/sources/anamax-result/",
+    publicCache:"/cache/1316/",
     step:10,
     dotSizeMin:20,
     dotSizeMax:500
   };
 
   // Load data and init
-  $.getJSON(conf.publicCache+'data.json', init);
+  $.getJSON(conf.publicCache+'index.json', init);
 
   // utils
   var nest = function (seq, keys) {
@@ -306,7 +301,6 @@ $(function() {
   };
 
   jQuery.fn.rotate = function(rotation) {
-
     var currentRotate = $(this).attr('rotate') ? parseInt($(this).attr('rotate')) : 0;
     var degrees = currentRotate + rotation;
 
@@ -318,7 +312,6 @@ $(function() {
                  'transform' : 'rotate('+ degrees +'deg)'});
     $(this).attr('rotate', degrees)
     return $(this);
-
   };
 
   window.addEventListener("beforeunload", function (e) {
