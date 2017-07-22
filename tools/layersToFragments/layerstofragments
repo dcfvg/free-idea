@@ -27,7 +27,7 @@ function layerToFiles {
     echo $psd " -> " $filenameclean.$resutltype
 
     mkdir $result$filenameclean
-    convert $raw/$filenameclean.psd $result$filenameclean/$filenameclean-%d.$resutltype
+    convert $raw/$filenameclean.psd -resize 1000x1000 $result$filenameclean/$filenameclean-%d.$resutltype
 
     # remove background
     rm $result$filenameclean/*-0.$resutltype
