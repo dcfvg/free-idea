@@ -4,6 +4,8 @@
 /tools/separate-2/result
 /tools/separate-2/cache
 /tools/separate-2/result-test/
+_sources/
+_fragments/
 
 bower_components/
 node_modules/
