@@ -2,21 +2,19 @@ $(function() {
 
   // search in cluster array (grid) the nearest result
   function search(size){
-
     var q = _.map(size, function(d){ return Math.ceil(d / 10) * 10;});
     var result = _(grid).filter({'w':q[0], 'h':q[1]}).value();
 
     if(result.length){
       appendResult(result[0]);
       searchTry=0;
-    }else if(searchTry < 100){
+    }else if (searchTry < 100){
       // try a new search
       searchTry++;
       var newSize = [ Math.abs(size[0]) - 10, Math.abs(size[1] + 10)];
       search(newSize);
     }else{
-      // get random part
-      appendResult(_(grid).shuffle().first());
+      appendResult(_(grid).shuffle().first()); // get random part
     }
   }
 
@@ -61,9 +59,6 @@ $(function() {
         })
 
     for (var i = s.elements/s.elementsPerLocation; i >= 0; i--) {
-      console.log(i);
-
-
       var resWidth = _.random(s.minWidth, s.maxWidth),
           resHeight = _.random(s.minWidth, s.maxHeight);
 
@@ -72,8 +67,7 @@ $(function() {
 
       for (var j = s.elementsPerLocation; j >= 0; j--) search([resWidth,resHeight])
 
-    };
-    console.log(s);
+    }
   }
 
   // create selection zone
@@ -85,6 +79,7 @@ $(function() {
 
   // UI FUNCTIONS
   function onMouseMove( e ){
+
     if (draw){
       $("#select").css({
         position:'absolute',
@@ -98,7 +93,7 @@ $(function() {
     currentMousePos.y = e.pageY;
     moves++;
 
-    if(draw_dot && draw && moves > moves_max){
+    if (draw_dot && draw && moves > moves_max){
       startMousePos.x = currentMousePos.x;
       startMousePos.y = currentMousePos.y;
 
@@ -107,7 +102,7 @@ $(function() {
       search([dotSize,dotSize]);
       moves = 0;
     }
-    if(draw_around && draw && moves > moves_max){
+    if (draw_around && draw && moves > moves_max){
       startMousePos.x = currentMousePos.x;
       startMousePos.y = currentMousePos.y;
 
@@ -133,7 +128,7 @@ $(function() {
 
   // keys
   function onKeyDown( e ){
-    if ( e.which == 32 ) if(draw == false) draw = true; // toogle draw mode
+    if ( e.which == 32 ) if (draw == false) draw = true; // toogle draw mode
   }
   function onKeyUp( e ){
     if ( e.which == 32 ) {
@@ -143,7 +138,6 @@ $(function() {
     }
   }
   function saveAsPng(){
-
     html2canvas(document.body, {
       onrendered: function(canvas) {
         document.body.appendChild(canvas);
@@ -203,7 +197,7 @@ $(function() {
   function mix(){
     var total = $paper.find("img").length;
     var offSet = Math.round(total/2) + _.random(0,total);
-    if(offSet == total) offSet = 1;
+    if (offSet == total) offSet = 1;
 
     $paper.find("img").each(function(index) {
 
@@ -232,18 +226,7 @@ $(function() {
     );
   }
 
-  function init_camera(){
-      var onCameraFail = function (e) { console.log('Camera did not work.', e) };
-      var video = document.querySelector("#my_camera");
-      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-      window.URL = window.URL || window.webkitURL;
-      navigator.getUserMedia({video:true}, function (stream) {
-          video.src = window.URL.createObjectURL(stream);
-          localMediaStream = stream;
-      }, onCameraFail);
-  }
-
-  function reset(){ if(confirm("💥 ?")) $paper.empty();}
+  function reset(){ if (confirm("💥 ?")) $paper.empty();}
 
   function init(d){
     // init_camera();
@@ -314,11 +297,5 @@ $(function() {
     return $(this);
   };
 
-  window.addEventListener("beforeunload", function (e) {
-      var confirmationMessage = 'It looks like you have been editing something. '
-                              + 'If you leave before saving, your changes will be lost.';
 
-      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-  });
 });
