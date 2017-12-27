@@ -1,6 +1,8 @@
 #!/bin/bash
 # set -x
 
+source config.sh
+
 now=$(date +"%y.%m.%d-%H.%M.%S")
 border=0 				# cropblack borders (±25 for 150 dpi)
 minSurface=100 	# smallest piece in px2 (±100 for 150 dpi)
@@ -15,7 +17,7 @@ originPath=$(dirname $1)
 collection=$(basename $originPath)
 
 cache="cache/"$scanid"/"
-resultdir="/Users/benoit/Scripts/custom/free-idea/sources/"$collection"-result/"$scanid"/"
+resultdir="../../_fragments/"$collection"-result/"$scanid"/"
 resultdir=${2:-$resultdir}
 
 resultDone=$resultdir/raw-

@@ -15,14 +15,13 @@ do
 	originPath=$(dirname $1)
 	collection=$(basename $1)
 
-	resultdir="/Users/benoit/Scripts/free-idea/free-idea-code/_fragments/"$collection"-result/"$scanid"/"
+	resultdir="../../_fragments/"$collection"-result/"$scanid"/"
 
 	if [ ! -d "$resultdir" ]; then
 
 		if [[ -a $step ]]; then
 			echo $step
 			bash separate.sh "$step"
-			curl -L "http://localhost:3000/?f5=1"
 		fi
 	else
 		echo "skiping $step : result dir already exists"
