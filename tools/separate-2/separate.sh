@@ -1,8 +1,6 @@
 #!/bin/bash
 # set -x
 
-source config.sh
-
 now=$(date +"%y.%m.%d-%H.%M.%S")
 border=0 				# cropblack borders (±25 for 150 dpi)
 minSurface=100 	# smallest piece in px2 (±100 for 150 dpi)
