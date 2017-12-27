@@ -1,22 +1,16 @@
-var glob = require('glob');
-var _ = require('lodash');
-var conf = require('./config.json');
-var fs = require('fs');
-var path = require('path');
-var fs = require('fs');
-var sizeOf = require('image-size');
-var mkdirp = require('mkdirp');
-var fs = require('fs');
-var fsync = require('fs-sync');
-var argv = require('yargs').argv;
-var conf = require('./config.json');
-
+const fs = require('fs');
+const path = require('path');
+const argv = require('yargs').argv;
+const fsync = require('fs-sync');
+const mkdirp = require('mkdirp');
+const glob = require('glob');
+const _ = require('lodash');
+const sizeOf = require('image-size');
+const conf = require('./config.json');
 
 const path_string = __dirname+'/'+argv['_'][0];
 
-fs.stat(path_string, function(err,res){
-  if(res.isDirectory(path_string)) moveFiles(path_string)
-})
+if(fs.statSync(path_string).isDirectory()) moveFiles(path_string);
 
 function moveFiles(path_string){
   console.log('starting …');
@@ -27,7 +21,7 @@ function moveFiles(path_string){
 
     console.log(files.length,'files to sort');
 
-    _(files).forEach(function(f,i){
+    _.forEach(files, function(f,i){
       var size = sizeOf(f);
       var approxSize = _.map(size, function(d){ return Math.ceil(d / 10) * 10;})
 
@@ -39,11 +33,11 @@ function moveFiles(path_string){
       fileCount += count;
 
       fsync.copy(f, sizePath+count+'.png');
-    }).value()
+    });
 
     console.log('\t'+fileCount+' moved !');
     writeIndex(cache);
-  })
+  });
 }
 
 function writeIndex(cache){
